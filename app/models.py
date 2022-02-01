@@ -2,14 +2,16 @@ from ast import For
 from django.db import models
 from django.contrib.auth.models import User
 
+from app.shared.models import TimeStampedModel
+
 # Create your models here.
 
 
-class Settings(models.Model):
+class Settings(TimeStampedModel):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
 
-class Classroom(models.Model):
+class Classroom(TimeStampedModel):
     students = models.ManyToManyField(User, related_name='students')
     teacher = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name='teacher')
@@ -17,18 +19,19 @@ class Classroom(models.Model):
     description = models.TextField()
 
 
-class Lesson(models.Model):
+class Lesson(TimeStampedModel):
     classroom = models.ForeignKey(
         Classroom, on_delete=models.CASCADE, related_name='classroom')
-    name = models.CharField()
+    name = models.CharField(max_length=200)
 
 
-class Quiz(models.Model):
+class Quiz(TimeStampedModel):
     lesson = models.ForeignKey(
         Lesson, on_delete=models.CASCADE, related_name='quiz')
+    created_at = models
 
 
-class Question(models.Model):
+class Question(TimeStampedModel):
     first_question = models.CharField(max_length=200)
     second_question = models.CharField(max_length=200)
     third_question = models.CharField(max_length=200)
@@ -37,13 +40,13 @@ class Question(models.Model):
     user_answer = models.ManyToManyField(User, through='UserAnswer')
 
 
-class UserAnswer(models.Model):
+class UserAnswer(TimeStampedModel):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
     user_choice = models.IntegerField()
 
 
-class Comment(models.Model):
+class Comment(TimeStampedModel):
     lesson = models.ForeignKey(
         Lesson, on_delete=models.CASCADE, related_name='lesson')
     comment = models.CharField(max_length=500)
