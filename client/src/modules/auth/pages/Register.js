@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useState } from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -13,10 +13,39 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { Container } from '@mui/material';
+import { useMutation } from 'react-query';
+import { authenticationService } from '../AuthService';
 
 const theme = createTheme();
 
 export default function Register() {
+
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
+    const [passwordConfirmation, setPasswordConfirmation] = useState('');
+
+    const handleUsername = e => setUsername(e.target.value);
+    const handlePassword = e => setPassword(e.target.value);
+    const handlePasswordConfirmation = e => setPasswordConfirmation(e.target.value);
+
+    const mutation = useMutation((user) => authenticationService.register(user));
+
+    if (mutation.isSuccess) {
+        return (
+            <div>
+                Thank you for signing up! You should be getting an email! Please click
+                the link in the email to activate it!
+            </div>
+        );
+    }
+    const handleRegistration = (values) => {
+        mutation.mutate(values);
+    };
+
+    const handleLogin = (values) => {
+        mutation.mutate(values);
+    };
+
     return (
         <ThemeProvider theme={theme}>
             <Container component="main" maxWidth="xs">
@@ -31,27 +60,19 @@ export default function Register() {
                         <LockOutlinedIcon />
                     </Avatar>
                     <Typography component="h1" variant="h5">
-                        Sign Up
+                        Sign In
                     </Typography>
                     <Box>
-                    <TextField
+                        <TextField
                             margin="normal"
+                            value={username}
+                            onChange={handleUsername}
                             required
                             fullWidth
-                            id="email"
+                            id="username"
                             label="Username"
                             name="username"
                             autoComplete="username"
-                            autoFocus
-                        />
-                        <TextField
-                            margin="normal"
-                            required
-                            fullWidth
-                            id="email"
-                            label="Email Address"
-                            name="email"
-                            autoComplete="email"
                             autoFocus
                         />
                         <TextField
@@ -62,31 +83,43 @@ export default function Register() {
                             label="Password"
                             type="password"
                             id="password"
+                            value={password}
+                            onChange={handlePassword}
                             autoComplete="current-password"
                         />
                         <TextField
                             margin="normal"
                             required
                             fullWidth
-                            name="password"
+                            name="passwordConfirmation"
                             label="Password Confirmation"
-                            type="password"
-                            id="password"
+                            type="passwordConfirmation"
+                            id="passwordConfirmation"
+                            value={passwordConfirmation}
+                            onChange={handlePasswordConfirmation}
                             autoComplete="current-password"
                         />
                         <Button
+                            onClick={handleRegistration}
                             type="submit"
                             fullWidth
                             variant="contained"
                             sx={{ mt: 3, mb: 2 }}
                         >
-                            Sign Up
+                            Sign In
                         </Button>
-
-                        <Link href="/login" variant="body2">
-                            {"Have an account? Sign In"}
-                        </Link>
-
+                        <Grid container>
+                            <Grid item xs>
+                                <Link href="/register" variant="body2">
+                                    Forgot password?
+                                </Link>
+                            </Grid>
+                            <Grid item>
+                                <Link href="/register" variant="body2">
+                                    {"Don't have an account? Sign Up"}
+                                </Link>
+                            </Grid>
+                        </Grid>
                     </Box>
                 </Box>
             </Container>
