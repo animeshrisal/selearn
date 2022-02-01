@@ -5,20 +5,29 @@ import Login from "./modules/auth/pages/Login";
 import './App.scss'
 import Register from "./modules/auth/pages/Register";
 import Dashboard from "./modules/dashboard/Dashboard";
+import { SocketProvider, AuthenticationProvider } from "./modules/shared/context";
+import { QueryClient, QueryClientProvider } from "react-query";
+const queryClient = new QueryClient();
 
 function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route exact path="/login" element={<Login />} />
-        <Route exact path="/register" element={<Register />} />
-        <Route path="/dashboard" element={
-          <PrivateRoute>
-            <Dashboard />
-          </PrivateRoute>
-        } />
-      </Routes>
-    </BrowserRouter>
+    <AuthenticationProvider>
+      <SocketProvider>
+        <QueryClientProvider client={queryClient}>
+          <BrowserRouter>
+            <Routes>
+              <Route exact path="/login" element={<Login />} />
+              <Route exact path="/register" element={<Register />} />
+              <Route path="/dashboard" element={
+                <PrivateRoute>
+                  <Dashboard />
+                </PrivateRoute>
+              } />
+            </Routes>
+          </BrowserRouter>
+        </QueryClientProvider>
+      </SocketProvider>
+    </AuthenticationProvider>
   );
 }
 
