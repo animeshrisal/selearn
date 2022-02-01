@@ -10,21 +10,22 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
+from datetime import timedelta
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-import os
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
-SECRET_KEY = os.environ.get("SECRET_KEY", "django-insecure-#$^+hx-mc6rof7bwm_h0!-*50p91dvz*@b7wukvs5k93%0ao8q")
+SECRET_KEY = os.environ.get(
+    "SECRET_KEY", "django-insecure-#$^+hx-mc6rof7bwm_h0!-*50p91dvz*@b7wukvs5k93%0ao8q")
 
 DEBUG = int(os.environ.get("DEBUG", default=1))
 ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS", "*").split(" ")
 
-from datetime import timedelta
 
 # Application definition
 
@@ -83,7 +84,7 @@ CORS_ALLOWED_ORIGINS = [
 
 
 SIMPLE_JWT = {
-   'AUTH_HEADER_TYPES': ('JWT',),
+    'AUTH_HEADER_TYPES': ('JWT',),
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
     'SLIDING_TOKEN_LIFETIME': timedelta(minutes=60),
@@ -102,6 +103,14 @@ DATABASES = {
         "HOST": os.environ.get("SQL_HOST", "localhost"),
         "PORT": os.environ.get("SQL_PORT", "5432"),
     }
+}
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
+
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
 }
 
 
@@ -138,7 +147,6 @@ USE_L10N = True
 USE_TZ = True
 
 
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
@@ -163,8 +171,8 @@ CHANNEL_LAYERS = {
     },
 }
 
-DOMAIN= 'localhost:3000'
-SITE_NAME= 'Arts'
+DOMAIN = 'localhost:3000'
+SITE_NAME = 'Arts'
 
 DJOSER = {
 
@@ -182,7 +190,7 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 
 SPECTACULAR_SETTINGS = {
-    'TITLE': 'Artsite',
+    'TITLE': 'Selearn',
     'DESCRIPTION': 'Your project description',
     'VERSION': '1.0.0',
     'COMPONENT_SPLIT_REQUEST': True
