@@ -27,16 +27,19 @@ class Lesson(TimeStampedModel):
 
 class Quiz(TimeStampedModel):
     lesson = models.ForeignKey(
-        Lesson, on_delete=models.CASCADE, related_name='quiz')
+        Lesson, on_delete=models.CASCADE, related_name='quiz_lesson')
     created_at = models
+    name = models.CharField(max_length=200)
 
 
 class Question(TimeStampedModel):
-    first_question = models.CharField(max_length=200)
-    second_question = models.CharField(max_length=200)
-    third_question = models.CharField(max_length=200)
-    fourth_question = models.CharField(max_length=200)
-    answer = models.IntegerField()
+    question = models.CharField(max_length=200)
+    first_choice = models.TextField()
+    second_choice = models.TextField()
+    third_choice = models.TextField()
+    fourth_choice = models.TextField()
+    correct_choice = models.IntegerField()
+
     user_answer = models.ManyToManyField(User, through='UserAnswer')
 
 
