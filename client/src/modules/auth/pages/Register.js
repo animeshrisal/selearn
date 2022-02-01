@@ -22,11 +22,11 @@ export default function Register() {
 
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
-    const [passwordConfirmation, setPasswordConfirmation] = useState('');
+    const [rePassword, setRePassword] = useState('');
 
     const handleUsername = e => setUsername(e.target.value);
     const handlePassword = e => setPassword(e.target.value);
-    const handlePasswordConfirmation = e => setPasswordConfirmation(e.target.value);
+    const handlePasswordConfirmation = e => setRePassword(e.target.value);
 
     const mutation = useMutation((user) => authenticationService.register(user));
 
@@ -39,11 +39,7 @@ export default function Register() {
         );
     }
     const handleRegistration = (values) => {
-        mutation.mutate(values);
-    };
-
-    const handleLogin = (values) => {
-        mutation.mutate(values);
+        mutation.mutate({username, password, rePassword});
     };
 
     return (
@@ -91,11 +87,11 @@ export default function Register() {
                             margin="normal"
                             required
                             fullWidth
-                            name="passwordConfirmation"
-                            label="Password Confirmation"
-                            type="passwordConfirmation"
-                            id="passwordConfirmation"
-                            value={passwordConfirmation}
+                            name="rePassword"
+                            label="rePassword"
+                            type="rePassword"
+                            id="rePassword"
+                            value={rePassword}
                             onChange={handlePasswordConfirmation}
                             autoComplete="current-password"
                         />
