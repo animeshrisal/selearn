@@ -21,7 +21,7 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data/
     env_file:
-      - ./.env.test.db
+      - ./.env
   nginx:
     build: ./nginx
     volumes:
@@ -42,7 +42,7 @@ services:
       - static_volume:/home/app/web/staticfiles
       - media_volume:/home/app/web/mediafiles
     env_file:
-      - ./.env.test
+      - ./.env
     depends_on:
       - db
       - redis
