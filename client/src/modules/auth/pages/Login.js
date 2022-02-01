@@ -44,8 +44,8 @@ export default function Login() {
       return <Navigate to="/dashboard/" />;
     }
   
-    const handleLogin = (values) => {
-      mutation.mutate(values);
+    const handleLogin = () => {
+      mutation.mutate({username, password});
     };
 
     return (

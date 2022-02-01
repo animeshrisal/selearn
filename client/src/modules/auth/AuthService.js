@@ -28,12 +28,12 @@ function login({ username, password }) {
     });
 }
 
-function register({ email, username, password, re_password }) {
+function register({ email, username, password, rePassword }) {
   const formData = new FormData();
   formData.append("username", username);
   formData.append("password", password);
   formData.append("email", email);
-  formData.append("re_password", re_password);
+  formData.append("re_password", rePassword);
 
   const requestOptions = {
     method: "POST",

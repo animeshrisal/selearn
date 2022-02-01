@@ -21,10 +21,12 @@ const theme = createTheme();
 export default function Register() {
 
     const [username, setUsername] = useState('');
+    const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [rePassword, setRePassword] = useState('');
 
     const handleUsername = e => setUsername(e.target.value);
+    const handleEmail = e => setEmail(e.target.value);
     const handlePassword = e => setPassword(e.target.value);
     const handlePasswordConfirmation = e => setRePassword(e.target.value);
 
@@ -39,7 +41,7 @@ export default function Register() {
         );
     }
     const handleRegistration = (values) => {
-        mutation.mutate({username, password, rePassword});
+        mutation.mutate({ username, email, password, rePassword });
     };
 
     return (
@@ -69,6 +71,18 @@ export default function Register() {
                             label="Username"
                             name="username"
                             autoComplete="username"
+                            autoFocus
+                        />
+                        <TextField
+                            margin="normal"
+                            value={email}
+                            onChange={handleEmail}
+                            required
+                            fullWidth
+                            id="email"
+                            label="Email"
+                            name="email"
+                            autoComplete="email"
                             autoFocus
                         />
                         <TextField
