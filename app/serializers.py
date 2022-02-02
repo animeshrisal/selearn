@@ -42,9 +42,19 @@ class LessonSerializer(serializers.ModelSerializer):
     description = serializers.CharField()
     body = serializers.CharField()
 
+    def create(self, validated_data):
+        classroom = Lesson.objects.create(
+            lesson=validated_data['lesson'],
+            description=validated_data['description'],
+            body=validated_data['body'],
+            classroom=self.context['classroom']
+        )
+
+        return classroom
+
     class Meta:
         model = Lesson
-        fields = ('id', 'lesson', 'body')
+        fields = ('id', 'lesson', 'description', 'body')
 
 
 class QuizSerializer(serializers.ModelSerializer):

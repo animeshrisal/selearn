@@ -18,11 +18,10 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path('classroom/', views.ClassroomViewSet.as_view(
-        {'get': 'list', 'post': 'create'}), name="classroom"),
+    path('classroom/', views.ClassroomViewSet.as_view({'get': 'list', 'post': 'create'}), name="classroom"),
     path('classroom/<int:pk>/',
-         views.ClassroomViewSet.as_view({'get': 'retrieve', 'put': 'update', 'delete': 'destroy'}), name="classroom-detail")
-
+         views.ClassroomViewSet.as_view({'get': 'retrieve', 'put': 'update', 'delete': 'destroy'}), name="classroom-detail"),
+    path('classroom/<int:pk>/lesson', views.LessonListCreateAPI.as_view(), name="lesson")
 ]
 
 
