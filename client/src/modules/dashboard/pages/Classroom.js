@@ -1,67 +1,87 @@
-import { Container, Fab, Grid, Paper } from '@mui/material';
+import { Accordion, AccordionDetails, AccordionSummary, Button, CardContent, CardMedia, Container, Grid, Typography } from '@mui/material';
 import React, { useState } from 'react';
-import ClassroomCard from '../components/ClassroomPaper';
-import AddIcon from '@mui/icons-material/Add';
-import { useMatch } from 'react-router-dom';
-import { useMutation, useQuery } from 'react-query';
+import { useQuery } from 'react-query';
+import { useParams } from 'react-router-dom';
 import { dashboardService } from '../DashboardService';
-import Dialog from '@mui/material/Dialog';
-import AddClassroomDialogue from '../components/AddClassroomDialogue';
+import SendIcon from '@mui/icons-material/Send';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
-const Classroom = () => {
-
-    const { isLoading, data } = useQuery("getFeed", dashboardService.getClassrooms);
-
-    const mutation = useMutation(
-        (classroom) => dashboardService.postClassroom(classroom),
-        {
-            onSuccess: (mutation) => {
-                console.log("AA")
-            },
-        }
+const Classroom = (props) => {
+    const { classroomId } = useParams();
+    const { isLoading, data } = useQuery(["classroom", classroomId], () =>
+        dashboardService.getClassroom(classroomId)
     );
-    const [openModal, setOpenModal] = useState(false)
 
-    const handleClickOpen = () => {
-        setOpenModal(true);
-    };
-
-    const handleClose = () => {
-        setOpenModal(false);
-    };
-
-    const addClassroom = (classroom) => {
-        console.log(classroom)
-        mutation.mutate(classroom)
-    }
+    console.log(data)
 
     if (isLoading) {
         return <div>Loading...</div>;
     }
     if (data) {
         return (
-            <React.Fragment>
+            <Container>
                 <Grid container spacing={2}>
-                    {data.results.map((classroom) => (
-                        <Grid key={classroom.id} item xs={4}>
-                            <ClassroomCard  key={classroom.id} {...classroom} />
-                        </Grid>
-                    ))}
-
+                    <Grid container direction="row" justifyContent="flex-end" alignItems="flex-start">
+                        <Button variant="contained">
+                            Enroll
+                        </Button>
+                    </Grid>
+                    <Grid item xs={12}>
+                        <CardMedia
+                            component="img"
+                            height="140"
+                            image={`${data.banner}`}
+                            alt="green iguana"
+                        />
+                        <CardContent>
+                            <Typography gutterBottom variant="h5" component="div">
+                                {data.subject}
+                            </Typography>
+                            <Typography variant="body2" color="text.secondary">
+                                {data.description}
+                            </Typography>
+                        </CardContent>
+                    </Grid>
+                    <Grid item xs={8}>
+                        <Accordion>
+                            <AccordionSummary
+                                expandIcon={<ExpandMoreIcon />}
+                                aria-controls="panel1a-content"
+                                id="panel1a-header"
+                            >
+                                <Typography>Accordion 1</Typography>
+                            </AccordionSummary>
+                            <AccordionDetails>
+                                <Typography>
+                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse
+                                    malesuada lacus ex, sit amet blandit leo lobortis eget.
+                                </Typography>
+                            </AccordionDetails>
+                        </Accordion>
+                        <Accordion>
+                            <AccordionSummary
+                                expandIcon={<ExpandMoreIcon />}
+                                aria-controls="panel2a-content"
+                                id="panel2a-header"
+                            >
+                                <Typography>Accordion 2</Typography>
+                            </AccordionSummary>
+                            <AccordionDetails>
+                                <Typography>
+                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse
+                                    malesuada lacus ex, sit amet blandit leo lobortis eget.
+                                </Typography>
+                            </AccordionDetails>
+                        </Accordion>
+                    </Grid>
+                    <Grid item xs={4}>
+                        AA
+                    </Grid>
                 </Grid>
-                <Fab onClick={handleClickOpen} color="primary" aria-label="add">
-                    <AddIcon />
-                </Fab>
-                <AddClassroomDialogue
-                    handleClickOpen={handleClickOpen}
-                    handleClose={handleClose}
-                    openModal={openModal}
-                    addClassroom={addClassroom}
-                />
-            </React.Fragment>
+            </Container>
         )
     }
+
 }
 
-export default Classroom
-
+export default Classroom;

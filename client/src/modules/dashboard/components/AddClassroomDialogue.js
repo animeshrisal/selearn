@@ -16,6 +16,9 @@ const AddClassroomDialogue = (props) => {
 
     const addClassroom = () => {
         props.addClassroom({subject, description, banner})
+        setSubject('')
+        setDescription('')
+        
     }
 
 

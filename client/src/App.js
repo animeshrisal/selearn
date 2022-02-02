@@ -10,6 +10,7 @@ import { QueryClient, QueryClientProvider } from "react-query";
 import ConfirmUser from "./modules/auth/pages/ConfirmUser";
 import Feed from "./modules/dashboard/pages/Feed";
 import Classroom from "./modules/dashboard/pages/Classroom";
+import ClassroomList from "./modules/dashboard/pages/ClassroomList";
 const queryClient = new QueryClient();
 
 function App() {
@@ -33,6 +34,11 @@ function App() {
                   </PrivateRoute>
                 } />
                 <Route path="classroom/" element={
+                  <PrivateRoute>
+                    <ClassroomList />
+                  </PrivateRoute>
+                } />
+                                <Route path="classroom/:classroomId" element={
                   <PrivateRoute>
                     <Classroom />
                   </PrivateRoute>

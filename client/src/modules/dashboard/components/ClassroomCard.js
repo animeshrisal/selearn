@@ -8,6 +8,12 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 
 const ClassroomCard = (props) => {
+
+    const goToClassroomPage = () => {
+        console.log("ASDASD")
+        props.goToClassroomPage(props.id)
+    };
+
     return (
         <Card sx={{ maxWidth: 345 }}>
             <CardMedia
@@ -25,7 +31,7 @@ const ClassroomCard = (props) => {
                 </Typography>
             </CardContent>
             <CardActions>
-                <Button size="small">View Class</Button>
+                <Button onClick={goToClassroomPage} size="small">View Class</Button>
             </CardActions>
         </Card>
     )
