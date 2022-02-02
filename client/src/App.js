@@ -8,6 +8,8 @@ import Dashboard from "./modules/dashboard/Dashboard";
 import { SocketProvider, AuthenticationProvider } from "./modules/shared/context";
 import { QueryClient, QueryClientProvider } from "react-query";
 import ConfirmUser from "./modules/auth/pages/ConfirmUser";
+import Feed from "./modules/dashboard/pages/Feed";
+import Classroom from "./modules/dashboard/pages/Classroom";
 const queryClient = new QueryClient();
 
 function App() {
@@ -17,14 +19,26 @@ function App() {
         <QueryClientProvider client={queryClient}>
           <BrowserRouter>
             <Routes>
-              <Route exact path="/login" element={<Login />} />
+              <Route exact path="/login/" element={<Login />} />
               <Route exact path="/register" element={<Register />} />
               <Route path="/auth/:uid/:token" element={<ConfirmUser />} />
-              <Route path="/dashboard" element={
+              <Route path="/dashboard/" element={
                 <PrivateRoute>
                   <Dashboard />
                 </PrivateRoute>
-              } />
+              }>
+                <Route path="" element={
+                  <PrivateRoute>
+                    <Feed />
+                  </PrivateRoute>
+                } />
+                <Route path="classroom/" element={
+                  <PrivateRoute>
+                    <Classroom />
+                  </PrivateRoute>
+                } />
+              </Route>
+
             </Routes>
           </BrowserRouter>
         </QueryClientProvider>

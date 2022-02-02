@@ -1,20 +1,21 @@
 import { Container } from "@mui/material";
 import React from "react";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Outlet } from "react-router-dom";
 import PrivateRoute from "../shared/components/PrivateRoute";
+import NavBar from "./components/NavBar";
+import Classroom from "./pages/Classroom";
+import Feed from "./pages/Feed";
+import './styles/classroom.scss'
 
 
 const Dashboard = () => {
     return (
-        <Container>
-            <Routes>
-                <Route path="/dashboard" element={
-                    <PrivateRoute>
-                        <Dashboard />
-                    </PrivateRoute>
-                } />
-            </Routes>
-        </Container>
+        <React.Fragment>
+            <NavBar />
+            <Container fixed class="classroom-container">
+                <Outlet />
+            </Container>
+        </React.Fragment>
     );
 };
 export default Dashboard;
