@@ -17,7 +17,8 @@ class Classroom(TimeStampedModel):
         User, on_delete=models.CASCADE, related_name='teacher')
     subject = models.CharField(max_length=200)
     description = models.TextField()
-
+    banner = models.ImageField(
+        upload_to="banners", default="banners/default.png")
 
 class Lesson(TimeStampedModel):
     classroom = models.ForeignKey(
