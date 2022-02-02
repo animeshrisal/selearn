@@ -1,4 +1,4 @@
-from ast import For
+from types import ClassMethodDescriptorType
 from django.db import models
 from django.contrib.auth.models import User
 
@@ -9,7 +9,6 @@ from app.shared.models import TimeStampedModel
 
 class Settings(TimeStampedModel):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-
 
 class Classroom(TimeStampedModel):
     students = models.ManyToManyField(User, related_name='students', blank=True)
@@ -27,11 +26,9 @@ class Lesson(TimeStampedModel):
     description = models.TextField()
     body = models.TextField()
 
-
 class Quiz(TimeStampedModel):
-    lesson = models.ForeignKey(
-        Lesson, on_delete=models.CASCADE, related_name='quiz_lesson')
-    created_at = models
+    classroom = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name='quiz')
     name = models.CharField(max_length=200)
 
 

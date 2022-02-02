@@ -1,4 +1,4 @@
-import { Accordion, AccordionDetails, AccordionSummary, Button, CardContent, CardMedia, Container, Grid, Typography } from '@mui/material';
+import { Accordion, AccordionDetails, AccordionSummary, Button, CardContent, CardMedia, CircularProgress, Container, Grid, Typography } from '@mui/material';
 import React, { useState } from 'react';
 import { useQuery } from 'react-query';
 import { useParams } from 'react-router-dom';
@@ -17,7 +17,7 @@ const Classroom = (props) => {
     );
 
     if (isLoading) {
-        return <div>Loading...</div>;
+        return <CircularProgress />;
     }
     if (data) {
         return (
@@ -45,9 +45,8 @@ const Classroom = (props) => {
                         </CardContent>
                     </Grid>
                     <Grid item xs={8}>
-
                         {
-                            isLoadingLesson ? <div></div> : dataLesson.results.map((lesson) => (
+                            isLoadingLesson ? <CircularProgress /> : dataLesson.results.map((lesson) => (
                                 <Accordion key={lesson.id}>
                                     <AccordionSummary
                                         expandIcon={<ExpandMoreIcon />}
@@ -61,7 +60,7 @@ const Classroom = (props) => {
                                             {lesson.description}
                                         </Typography>
                                         <Button>
-                                            Go to Quiz
+                                            Go to Lesson
                                         </Button>
                                     </AccordionDetails>
                                 </Accordion>
