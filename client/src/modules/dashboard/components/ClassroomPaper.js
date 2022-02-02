@@ -13,7 +13,7 @@ const ClassroomCard = (props) => {
             <CardMedia
                 component="img"
                 height="140"
-                image="/static/images/cards/contemplative-reptile.jpg"
+                image={`http://localhost:8000${props.banner}`}
                 alt="green iguana"
             />
             <CardContent>
