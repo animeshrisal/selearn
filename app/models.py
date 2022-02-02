@@ -24,6 +24,8 @@ class Lesson(TimeStampedModel):
     classroom = models.ForeignKey(
         Classroom, on_delete=models.CASCADE, related_name='classroom')
     name = models.CharField(max_length=200)
+    description = models.TextField()
+    body = models.TextField()
 
 
 class Quiz(TimeStampedModel):

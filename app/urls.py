@@ -20,7 +20,7 @@ from . import views
 urlpatterns = [
     path('classroom/', views.ClassroomViewSet.as_view(
         {'get': 'list', 'post': 'create'}), name="classroom"),
-    path('classroom/<int:classroom_pk>/',
+    path('classroom/<int:pk>/',
          views.ClassroomViewSet.as_view({'get': 'retrieve', 'put': 'update', 'delete': 'destroy'}), name="classroom-detail")
 
 ]
