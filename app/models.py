@@ -28,9 +28,14 @@ class Lesson(TimeStampedModel):
 
 class Quiz(TimeStampedModel):
     classroom = models.ForeignKey(
-        User, on_delete=models.CASCADE, related_name='quiz')
+        Classroom, on_delete=models.CASCADE, related_name='quiz')
+    student = models.ManyToManyField(User, blank=True, through='UserQuiz')
     name = models.CharField(max_length=200)
 
+class UserQuiz(TimeStampedModel):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE)
+    completed = models.BooleanField(default=False)
 
 class Question(TimeStampedModel):
     question = models.CharField(max_length=200)
@@ -46,7 +51,7 @@ class Question(TimeStampedModel):
 class UserAnswer(TimeStampedModel):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
-    user_choice = models.IntegerField()
+    user_choice = models.IntegerField(blank=True)
 
 
 class Comment(TimeStampedModel):
