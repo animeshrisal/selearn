@@ -38,13 +38,13 @@ class ClassroomSerializer(serializers.ModelSerializer):
 
 
 class LessonSerializer(serializers.ModelSerializer):
-    lesson = serializers.CharField()
+    name = serializers.CharField()
     description = serializers.CharField()
     body = serializers.CharField()
 
     def create(self, validated_data):
         classroom = Lesson.objects.create(
-            lesson=validated_data['lesson'],
+            name=validated_data['name'],
             description=validated_data['description'],
             body=validated_data['body'],
             classroom=self.context['classroom']
@@ -54,7 +54,7 @@ class LessonSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Lesson
-        fields = ('id', 'lesson', 'description', 'body')
+        fields = ('id', 'name', 'description', 'body')
 
 
 class QuizSerializer(serializers.ModelSerializer):

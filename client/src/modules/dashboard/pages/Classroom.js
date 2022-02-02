@@ -12,7 +12,9 @@ const Classroom = (props) => {
         dashboardService.getClassroom(classroomId)
     );
 
-    console.log(data)
+    const { isLoading: isLoadingLesson, data: dataLesson } = useQuery(["lessons"], () =>
+        dashboardService.getLessons(classroomId)
+    );
 
     if (isLoading) {
         return <div>Loading...</div>;
@@ -43,36 +45,28 @@ const Classroom = (props) => {
                         </CardContent>
                     </Grid>
                     <Grid item xs={8}>
-                        <Accordion>
-                            <AccordionSummary
-                                expandIcon={<ExpandMoreIcon />}
-                                aria-controls="panel1a-content"
-                                id="panel1a-header"
-                            >
-                                <Typography>Accordion 1</Typography>
-                            </AccordionSummary>
-                            <AccordionDetails>
-                                <Typography>
-                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse
-                                    malesuada lacus ex, sit amet blandit leo lobortis eget.
-                                </Typography>
-                            </AccordionDetails>
-                        </Accordion>
-                        <Accordion>
-                            <AccordionSummary
-                                expandIcon={<ExpandMoreIcon />}
-                                aria-controls="panel2a-content"
-                                id="panel2a-header"
-                            >
-                                <Typography>Accordion 2</Typography>
-                            </AccordionSummary>
-                            <AccordionDetails>
-                                <Typography>
-                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse
-                                    malesuada lacus ex, sit amet blandit leo lobortis eget.
-                                </Typography>
-                            </AccordionDetails>
-                        </Accordion>
+
+                        {
+                            isLoadingLesson ? <div></div> : dataLesson.results.map((lesson) => (
+                                <Accordion key={lesson.id}>
+                                    <AccordionSummary
+                                        expandIcon={<ExpandMoreIcon />}
+                                        aria-controls="panel1a-content"
+                                        id="panel1a-header"
+                                    >
+                                        <Typography>{lesson.name}</Typography>
+                                    </AccordionSummary>
+                                    <AccordionDetails>
+                                        <Typography>
+                                            {lesson.description}
+                                        </Typography>
+                                        <Button>
+                                            Go to Quiz
+                                        </Button>
+                                    </AccordionDetails>
+                                </Accordion>
+                            ))
+                        }
                     </Grid>
                     <Grid item xs={4}>
                         AA
