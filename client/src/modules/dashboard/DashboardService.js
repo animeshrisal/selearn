@@ -13,6 +13,19 @@ const getClassrooms = () => {
         });
 };
 
+const postClassroom = (classroom) => {
+    return fetch(
+      `${URL}/dashboard/classroom/`,
+      authenticatedRequestGenerator(classroom, "POST")
+    )
+      .then(handleResponse)
+      .then((classroom) => {
+        return classroom;
+      });
+  }
+  
+
 export const dashboardService = {
-    getClassrooms
+    getClassrooms,
+    postClassroom
 };
