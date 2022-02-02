@@ -12,7 +12,7 @@ const Dashboard = () => {
     return (
         <React.Fragment>
             <NavBar />
-            <Container fixed class="classroom-container">
+            <Container fixed className="classroom-container">
                 <Outlet />
             </Container>
         </React.Fragment>
