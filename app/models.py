@@ -12,7 +12,7 @@ class Settings(TimeStampedModel):
 
 
 class Classroom(TimeStampedModel):
-    students = models.ManyToManyField(User, related_name='students')
+    students = models.ManyToManyField(User, related_name='students', blank=True)
     teacher = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name='teacher')
     subject = models.CharField(max_length=200)
