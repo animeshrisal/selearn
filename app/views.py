@@ -60,7 +60,7 @@ class LessonRetrieveAPI(generics.RetrieveAPIView):
     serializer_class = LessonSerializer
 
     def retrieve(self, request, pk, lesson_pk):
-        queryset = Lesson.objects.filter(pk=lesson_pk)
+        queryset = Lesson.objects.get(pk=lesson_pk)
         serializer = LessonSerializer(queryset)
 
         return Response(serializer.data, status=status.HTTP_201_CREATED)
