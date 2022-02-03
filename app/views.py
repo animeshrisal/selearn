@@ -1,10 +1,11 @@
+from django.db import IntegrityError
 from django.shortcuts import render
 
 from rest_framework import viewsets, generics, filters, status
 from app import serializers
 
-from app.models import Classroom, Lesson
-from app.serializers import ClassroomSerializer, LessonSerializer
+from app.models import Classroom, Enrollment, Lesson
+from app.serializers import ClassroomSerializer, EnrollmentSerializer, LessonSerializer
 from rest_framework.response import Response
 
 from .shared.helpers import StandardResultsSetPagination
@@ -64,3 +65,19 @@ class LessonRetrieveAPI(generics.RetrieveAPIView):
         serializer = LessonSerializer(queryset)
 
         return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+class EnrollStudentAPI(generics.CreateAPIView):
+    serializer_class = EnrollmentSerializer
+
+    def create(self, request, pk):
+        try:
+            enrollment = Enrollment.objects.create(user_id=request.user.id, classroom_id=pk)
+            serializer = EnrollmentSerializer(enrollment)
+
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        except IntegrityError:
+            return Response({"error": "User is already enrolled"}, status=status.HTTP_400_BAD_REQUEST)
+
+        
+
+        

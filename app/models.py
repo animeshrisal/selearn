@@ -22,8 +22,11 @@ class Classroom(TimeStampedModel):
 class Enrollment(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     classroom = models.ForeignKey(Classroom, on_delete=models.CASCADE)
-    enrolled_at = models.DateField(blank=True)
-    completed_at = models.DateField(blank=True)
+    enrolled_at = models.DateField(blank=True, auto_now_add=True)
+    completed_at = models.DateField(blank=True, null=True)
+
+    class Meta:
+        unique_together = (('classroom_id', 'user_id'))
 
 class Lesson(TimeStampedModel):
     order = models.IntegerField()

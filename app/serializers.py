@@ -1,3 +1,4 @@
+from asyncore import read
 from urllib import request
 from django.shortcuts import render
 from rest_framework import serializers
@@ -36,7 +37,6 @@ class ClassroomSerializer(serializers.ModelSerializer):
         model = Classroom
         fields = ('id', 'subject', 'description', 'banner', 'teacher')
 
-
 class LessonSerializer(serializers.ModelSerializer):
     name = serializers.CharField()
     description = serializers.CharField()
@@ -57,6 +57,12 @@ class LessonSerializer(serializers.ModelSerializer):
         model = Lesson
         fields = ('id', 'name', 'description', 'body', 'order')
 
+class EnrollmentSerializer(serializers.Serializer):
+    enrolled_at = serializers.BooleanField(read_only=True)
+    completed_at = serializers.BooleanField(read_only=True)
+
+    class Meta:
+        fields = '__all__'
 
 class QuizSerializer(serializers.ModelSerializer):
     created_at = serializers.DateTimeField()
