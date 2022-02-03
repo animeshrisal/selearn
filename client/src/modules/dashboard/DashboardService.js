@@ -57,8 +57,19 @@ const postClassroom = (classroom) => {
     });
 }
 
+const createEnrollment = (classroomId)  => {
+  return fetch(
+    `${URL}/dashboard/classroom/${classroomId}/enroll`,
+    authenticatedRequestGenerator({}, "POST")
+  )
+    .then(handleResponse)
+    .then((enrollment) => {
+      return enrollment;
+    });
+}
 
 export const dashboardService = {
+  createEnrollment,
   getClassrooms,
   getClassroom,
   getEnrollmentStatus,

@@ -1,6 +1,6 @@
 import { Accordion, AccordionDetails, AccordionSummary, Avatar, Button, Card, CardActions, CardContent, CardHeader, CardMedia, CircularProgress, Container, Grid, IconButton, Typography } from '@mui/material';
 import React, { useState } from 'react';
-import { useQuery } from 'react-query';
+import { Mutation, useMutation, useQuery } from 'react-query';
 import { useNavigate, useParams } from 'react-router-dom';
 import { dashboardService } from '../DashboardService';
 import SendIcon from '@mui/icons-material/Send';
@@ -14,13 +14,26 @@ const Classroom = (props) => {
         dashboardService.getClassroom(classroomId)
     );
 
-    const { isLoading: isLoadingEnrollmentStatus, data: enrollmentStatus } = useQuery(["enrollment", classroomId],
+    const { isLoading: isLoadingEnrollmentStatus, data: enrollmentStatus, refetch } = useQuery(["enrollment", classroomId],
         () => dashboardService.getEnrollmentStatus(classroomId)
     )
 
     const { isLoading: isLoadingLesson, data: dataLesson } = useQuery(["lessons"], () =>
         dashboardService.getLessons(classroomId)
     );
+
+    const mutation = useMutation(
+        () => dashboardService.createEnrollment(classroomId),
+        {
+            onSuccess: (mutation) => {
+                refetch()
+            },
+        }
+    );
+
+    const createEnrollment = () => {
+        mutation.mutate()
+    }
 
     const goToLessonPage = (id) => {
         navigate(`lesson/${id}`);
@@ -36,7 +49,9 @@ const Classroom = (props) => {
                 <Grid container spacing={2}>
                     <Grid container direction="row" justifyContent="flex-end" alignItems="flex-start">
                         {isLoadingEnrollmentStatus ? <CircularProgress /> :
-                            enrollmentStatus.enrolled || enrollmentStatus.enrolled_at ? <Button>Enrolled</Button> : <Button>Enroll</Button>}
+                            enrollmentStatus.enrolled || enrollmentStatus.enrolled_at
+                                ? <Button>Enrolled</Button>
+                                : <Button onClick={createEnrollment}>Enroll</Button>}
                     </Grid>
                     <Grid item xs={12}>
                         <CardMedia
