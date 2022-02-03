@@ -21,7 +21,8 @@ urlpatterns = [
     path('classroom/', views.ClassroomViewSet.as_view({'get': 'list', 'post': 'create'}), name="classroom"),
     path('classroom/<int:pk>/',
          views.ClassroomViewSet.as_view({'get': 'retrieve', 'put': 'update', 'delete': 'destroy'}), name="classroom-detail"),
-    path('classroom/<int:pk>/lesson', views.LessonListCreateAPI.as_view(), name="lesson")
+    path('classroom/<int:pk>/lesson', views.LessonListCreateAPI.as_view(), name="lesson"),
+    path('classroom/<int:pk>/lesson/<int:lesson_pk>', views.LessonRetrieveAPI.as_view(), name="lesson")
 ]
 
 
