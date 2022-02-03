@@ -22,6 +22,11 @@ const Lesson = (props) => {
                 <Grid item xs={10}>
                     <Typography gutterBottom variant="h3" component="div"> {data.name} </Typography>
                 </Grid>
+                <Grid item xs={2}>
+                    <Button>
+                        Go to next lesson
+                    </Button>
+                </Grid>
                 <Grid item xs={12}>
                     {data.description}
                 </Grid>
@@ -37,7 +42,7 @@ const Lesson = (props) => {
                     </Paper>
                 </Grid>
                 <Grid item xs={2}>
-                    <Button>Go to next lesson</Button>
+                    <Button>Complete lesson</Button>
                 </Grid>
             </Grid>
         )
