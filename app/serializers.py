@@ -2,7 +2,7 @@ from urllib import request
 from django.shortcuts import render
 from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
-from .models import Classroom, Comment, Lesson, User
+from .models import Classroom, Comment, Lesson, Question, Quiz, User
 from django.db import transaction
 
 # Create your views here.
@@ -59,8 +59,11 @@ class LessonSerializer(serializers.ModelSerializer):
 
 class QuizSerializer(serializers.ModelSerializer):
     created_at = serializers.DateTimeField()
-    quiz = serializers.CharField()
-
+    name = serializers.CharField()
+    
+    class Meta:
+        model = Quiz
+        fields = ('id', 'name', 'created_at')
 
 class QuestionSerializer(serializers.ModelSerializer):
     question = serializers.CharField()
@@ -69,7 +72,15 @@ class QuestionSerializer(serializers.ModelSerializer):
     third_choice = serializers.CharField()
     fourth_choice = serializers.CharField()
 
+    class Meta:
+        model = Question
+        fields = ('id', 'question', 'first_choice', 'third_choice', 'fourth_choice')
+
 
 class CommentSerializer(serializers.ModelSerializer):
     comment = serializers.CharField()
     created_at = serializers.DateTimeField()
+
+    class Meta:
+        model = Comment
+        fields = ('id', 'comment', 'created_at')
