@@ -14,6 +14,10 @@ const Classroom = (props) => {
         dashboardService.getClassroom(classroomId)
     );
 
+    const { isLoading: isLoadingEnrollmentStatus,  isSuccess: isEnrolled } = useQuery(["enrollment", classroomId],
+        () => dashboardService.getEnrollmentStatus(classroomId)
+    )
+
     const { isLoading: isLoadingLesson, data: dataLesson } = useQuery(["lessons"], () =>
         dashboardService.getLessons(classroomId)
     );
@@ -25,14 +29,14 @@ const Classroom = (props) => {
     if (isLoading) {
         return <CircularProgress />;
     }
+
     if (data) {
         return (
             <Container>
                 <Grid container spacing={2}>
                     <Grid container direction="row" justifyContent="flex-end" alignItems="flex-start">
-                        <Button variant="contained">
-                            Enroll
-                        </Button>
+                        {isLoadingEnrollmentStatus ? <CircularProgress /> :
+                            isEnrolled ? <Button>Enrolled</Button> : <Button>Enroll</Button>}
                     </Grid>
                     <Grid item xs={12}>
                         <CardMedia
@@ -65,7 +69,7 @@ const Classroom = (props) => {
                                         <Typography>
                                             {lesson.description}
                                         </Typography>
-                                        <Button onClick = {() => goToLessonPage(lesson.id)}>
+                                        <Button onClick={() => goToLessonPage(lesson.id)}>
                                             Go to Lesson
                                         </Button>
                                     </AccordionDetails>
@@ -82,7 +86,7 @@ const Classroom = (props) => {
                                     </Avatar>
                                 }
                                 title="Teacher"
-                                subheader="Animesh Risal"
+                                subheader="Toast boi"
                             />
                             <CardContent>
                                 <Typography gutterBottom variant="h5" component="div">

@@ -10,7 +10,7 @@ const getClassrooms = () => {
     .then(handleResponse)
     .then((classroom) => {
       return classroom;
-    });
+    })
 };
 
 const getClassroom = (id) => {
@@ -21,12 +21,20 @@ const getClassroom = (id) => {
     });
 };
 
+const getEnrollmentStatus = (id) => {
+  return fetch(`${URL}/dashboard/classroom/${id}/enroll`, authenticatedGetRequestOption())
+    .then(handleResponse)
+    .then((enrollment) => {
+      return enrollment;
+    })
+}
+
 const getLessons = (classroomId) => {
   return fetch(`${URL}/dashboard/classroom/${classroomId}/lesson`, authenticatedGetRequestOption())
     .then(handleResponse)
     .then((classroom) => {
       return classroom;
-    });
+    })
 }
 
 const getLesson = (classroomId, lessonId) => {
@@ -53,6 +61,7 @@ const postClassroom = (classroom) => {
 export const dashboardService = {
   getClassrooms,
   getClassroom,
+  getEnrollmentStatus,
   postClassroom,
   getLessons,
   getLesson
