@@ -20,11 +20,15 @@ class Classroom(TimeStampedModel):
         upload_to="banners", default="banners/default.png")
 
 class Lesson(TimeStampedModel):
+    order = models.IntegerField()
     classroom = models.ForeignKey(
         Classroom, on_delete=models.CASCADE, related_name='classroom')
     name = models.CharField(max_length=200)
     description = models.TextField()
     body = models.TextField()
+
+    class Meta:
+        unique_together = (('id', 'order'))
 
 class Quiz(TimeStampedModel):
     classroom = models.ForeignKey(

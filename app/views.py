@@ -40,7 +40,7 @@ class LessonListCreateAPI(generics.ListCreateAPIView):
     pagination_class = StandardResultsSetPagination
 
     def list(self, request, pk):
-        queryset = self.queryset.filter(classroom_id=pk).order_by('-created_at')
+        queryset = self.queryset.filter(classroom_id=pk).order_by('order')
         page = self.paginate_queryset(queryset)
         serializer = LessonSerializer(page, many=True)
         result = self.get_paginated_response(serializer.data)
