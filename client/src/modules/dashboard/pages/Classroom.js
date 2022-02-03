@@ -14,7 +14,7 @@ const Classroom = (props) => {
         dashboardService.getClassroom(classroomId)
     );
 
-    const { isLoading: isLoadingEnrollmentStatus,  isSuccess: isEnrolled } = useQuery(["enrollment", classroomId],
+    const { isLoading: isLoadingEnrollmentStatus, data: enrollmentStatus } = useQuery(["enrollment", classroomId],
         () => dashboardService.getEnrollmentStatus(classroomId)
     )
 
@@ -36,7 +36,7 @@ const Classroom = (props) => {
                 <Grid container spacing={2}>
                     <Grid container direction="row" justifyContent="flex-end" alignItems="flex-start">
                         {isLoadingEnrollmentStatus ? <CircularProgress /> :
-                            isEnrolled ? <Button>Enrolled</Button> : <Button>Enroll</Button>}
+                            enrollmentStatus.enrolled || enrollmentStatus.enrolled_at ? <Button>Enrolled</Button> : <Button>Enroll</Button>}
                     </Grid>
                     <Grid item xs={12}>
                         <CardMedia

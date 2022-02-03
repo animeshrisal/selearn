@@ -90,7 +90,7 @@ class EnrollStudentAPI(generics.CreateAPIView,  generics.RetrieveAPIView):
 
             return Response(serializer.data, status=status.HTTP_200_OK)
         except Enrollment.DoesNotExist:
-            return Response({"error": "User is not enrolled"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"enrolled": False}, status=status.HTTP_200_OK)
 
 class GetStudentEnrollmentStatusAPI(generics.RetrieveAPIView):
     serializer_class = EnrollmentSerializer

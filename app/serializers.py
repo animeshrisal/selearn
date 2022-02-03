@@ -60,6 +60,10 @@ class LessonSerializer(serializers.ModelSerializer):
 class EnrollmentSerializer(serializers.Serializer):
     enrolled_at = serializers.DateField(read_only=True)
     completed_at = serializers.DateField(read_only=True)
+    enrolled = serializers.SerializerMethodField()
+
+    def get_enrolled(self, obj):
+        return True if obj.enrolled_at is not None else False
 
     class Meta:
         fields = '__all__'
