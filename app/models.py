@@ -11,7 +11,7 @@ class Settings(TimeStampedModel):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
 class Classroom(TimeStampedModel):
-    students = models.ManyToManyField(User, related_name='students', blank=True)
+    students = models.ManyToManyField(User, related_name='enrolled_students', blank=True, through='Enrollment')
     teacher = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name='teacher')
     subject = models.CharField(max_length=200)
@@ -19,16 +19,30 @@ class Classroom(TimeStampedModel):
     banner = models.ImageField(
         upload_to="banners", default="banners/default.png")
 
+class Enrollment(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    classroom = models.ForeignKey(Classroom, on_delete=models.CASCADE)
+    enrolled_at = models.DateField(blank=True)
+    completed_at = models.DateField(blank=True)
+
 class Lesson(TimeStampedModel):
     order = models.IntegerField()
     classroom = models.ForeignKey(
         Classroom, on_delete=models.CASCADE, related_name='classroom')
+    user = models.ManyToManyField(User, through='UserLesson')
     name = models.CharField(max_length=200)
     description = models.TextField()
     body = models.TextField()
 
     class Meta:
         unique_together = (('id', 'order'))
+
+
+class UserLesson(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    lesson = models.ForeignKey(Lesson, on_delete=models.CASCADE)
+    completed = models.BooleanField(default=False)
+    completed_at = models.DateField()
 
 class Quiz(TimeStampedModel):
     classroom = models.ForeignKey(
