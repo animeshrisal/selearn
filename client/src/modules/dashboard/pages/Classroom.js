@@ -1,13 +1,15 @@
-import { Accordion, AccordionDetails, AccordionSummary, Button, CardContent, CardMedia, CircularProgress, Container, Grid, Typography } from '@mui/material';
+import { Accordion, AccordionDetails, AccordionSummary, Avatar, Button, Card, CardActions, CardContent, CardHeader, CardMedia, CircularProgress, Container, Grid, IconButton, Typography } from '@mui/material';
 import React, { useState } from 'react';
 import { useQuery } from 'react-query';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { dashboardService } from '../DashboardService';
 import SendIcon from '@mui/icons-material/Send';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
 
 const Classroom = (props) => {
     const { classroomId } = useParams();
+    const navigate = useNavigate();
     const { isLoading, data } = useQuery(["classroom", classroomId], () =>
         dashboardService.getClassroom(classroomId)
     );
@@ -15,6 +17,10 @@ const Classroom = (props) => {
     const { isLoading: isLoadingLesson, data: dataLesson } = useQuery(["lessons"], () =>
         dashboardService.getLessons(classroomId)
     );
+
+    const goToLessonPage = (id) => {
+        navigate(`lesson/${id}`);
+    };
 
     if (isLoading) {
         return <CircularProgress />;
@@ -59,7 +65,7 @@ const Classroom = (props) => {
                                         <Typography>
                                             {lesson.description}
                                         </Typography>
-                                        <Button>
+                                        <Button onClick = {() => goToLessonPage(lesson.id)}>
                                             Go to Lesson
                                         </Button>
                                     </AccordionDetails>
@@ -68,7 +74,26 @@ const Classroom = (props) => {
                         }
                     </Grid>
                     <Grid item xs={4}>
-                        AA
+                        <Card sx={{ maxWidth: 345, height: 200 }}>
+                            <CardHeader
+                                avatar={
+                                    <Avatar aria-label="recipe">
+                                        R
+                                    </Avatar>
+                                }
+                                title="Teacher"
+                                subheader="Animesh Risal"
+                            />
+                            <CardContent>
+                                <Typography gutterBottom variant="h5" component="div">
+                                    {props.subject}
+                                </Typography>
+                                <Typography variant="body2" color="text.secondary">
+                                    {props.description}
+                                </Typography>
+                            </CardContent>
+
+                        </Card>
                     </Grid>
                 </Grid>
             </Container>

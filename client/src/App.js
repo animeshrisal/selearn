@@ -11,6 +11,7 @@ import ConfirmUser from "./modules/auth/pages/ConfirmUser";
 import Feed from "./modules/dashboard/pages/Feed";
 import Classroom from "./modules/dashboard/pages/Classroom";
 import ClassroomList from "./modules/dashboard/pages/ClassroomList";
+import Lesson from "./modules/dashboard/pages/Lesson";
 const queryClient = new QueryClient();
 
 function App() {
@@ -38,9 +39,14 @@ function App() {
                     <ClassroomList />
                   </PrivateRoute>
                 } />
-                                <Route path="classroom/:classroomId" element={
+                <Route path="classroom/:classroomId" element={
                   <PrivateRoute>
                     <Classroom />
+                  </PrivateRoute>
+                } />
+                <Route path="classroom/:classroomId/lesson/:lessonId" element={
+                  <PrivateRoute>
+                    <Lesson />
                   </PrivateRoute>
                 } />
               </Route>

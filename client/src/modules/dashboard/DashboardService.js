@@ -29,6 +29,15 @@ const getLessons = (classroomId) => {
     });
 }
 
+const getLesson = (classroomId, lessonId) => {
+  return fetch(`${URL}/dashboard/classroom/${classroomId}/lesson/${lessonId}`, authenticatedGetRequestOption())
+    .then(handleResponse)
+    .then((classroom) => {
+      return classroom;
+    });
+}
+
+
 const postClassroom = (classroom) => {
   return fetch(
     `${URL}/dashboard/classroom/`,
@@ -45,5 +54,6 @@ export const dashboardService = {
   getClassrooms,
   getClassroom,
   postClassroom,
-  getLessons
+  getLessons,
+  getLesson
 };

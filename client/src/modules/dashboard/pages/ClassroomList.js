@@ -58,15 +58,6 @@ const ClassroomList = (props) => {
                     ))}
 
                 </Grid>
-                <Fab onClick={handleClickOpen} color="primary" aria-label="add">
-                    <AddIcon />
-                </Fab>
-                <AddClassroomDialogue
-                    handleClickOpen={handleClickOpen}
-                    handleClose={handleClose}
-                    openModal={openModal}
-                    addClassroom={addClassroom}
-                />
             </React.Fragment>
         )
     }

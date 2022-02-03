@@ -14,11 +14,13 @@ const Lesson = (props) => {
         return <CircularProgress />;
     }
 
-    return (
-        <Container>
-            Lesson
-        </Container>
-    )
+    if (data) {
+        return (
+            <Container>
+                Lesson
+            </Container>
+        )
+    }
 
 
 }
