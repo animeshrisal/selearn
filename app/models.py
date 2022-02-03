@@ -44,6 +44,7 @@ class Question(TimeStampedModel):
     third_choice = models.TextField()
     fourth_choice = models.TextField()
     correct_choice = models.IntegerField()
+    quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE, related_name='quiz_question')
 
     user_answer = models.ManyToManyField(User, through='UserAnswer')
 
