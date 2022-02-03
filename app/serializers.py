@@ -58,8 +58,8 @@ class LessonSerializer(serializers.ModelSerializer):
         fields = ('id', 'name', 'description', 'body', 'order')
 
 class EnrollmentSerializer(serializers.Serializer):
-    enrolled_at = serializers.BooleanField(read_only=True)
-    completed_at = serializers.BooleanField(read_only=True)
+    enrolled_at = serializers.DateField(read_only=True)
+    completed_at = serializers.DateField(read_only=True)
 
     class Meta:
         fields = '__all__'
