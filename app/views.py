@@ -4,11 +4,16 @@ from django.shortcuts import render
 from rest_framework import viewsets, generics, filters, status, mixins
 from app import serializers
 
-from app.models import Classroom, Enrollment, Lesson
+from app.models import Classroom, Enrollment, Lesson, UserLesson
 from app.serializers import ClassroomSerializer, EnrollmentSerializer, LessonSerializer
 from rest_framework.response import Response
 
 from .shared.helpers import StandardResultsSetPagination
+
+from django.db import transaction
+
+import traceback
+import sys
 
 # Create your views here.
 
@@ -42,7 +47,8 @@ class LessonListCreateAPI(generics.ListCreateAPIView):
     pagination_class = StandardResultsSetPagination
 
     def list(self, request, pk):
-        queryset = self.queryset.filter(classroom_id=pk).order_by('order')
+        queryset = self.queryset.filter(
+            classroom_id=pk).select_related().order_by('order')
         page = self.paginate_queryset(queryset)
         serializer = LessonSerializer(page, many=True)
         result = self.get_paginated_response(serializer.data)
@@ -74,14 +80,30 @@ class EnrollStudentAPI(generics.CreateAPIView,  generics.RetrieveAPIView):
 
     def create(self, request, pk):
         try:
-            enrollment = Enrollment.objects.create(
-                user_id=request.user.id, classroom_id=pk)
-            serializer = EnrollmentSerializer(enrollment)
+            with transaction.atomic():
+                enrollment = Enrollment.objects.create(
+                    user_id=request.user.id, classroom_id=pk)
+                serializer = EnrollmentSerializer(enrollment)
 
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+                lesson_ids = list(Lesson.objects.filter(classroom_id=pk).values_list('id', flat=True))
+                
+                user_lessons = []
+
+                for lesson_id in lesson_ids:
+                    user_lessons.append(UserLesson(
+                        user_id=request.user.id,
+                        lesson_id=lesson_id
+                    ))
+
+                UserLesson.objects.bulk_create(user_lessons)
+
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
         except IntegrityError:
             return Response({"error": "User is already enrolled"}, status=status.HTTP_400_BAD_REQUEST)
-
+        except Exception:
+            print(traceback.format_exc())
+            return Response({"error": "Could not enroll user"}, status=status.HTTP_400_BAD_REQUEST)
+            
     def retrieve(self, request, pk):
         try:
             enrollment = Enrollment.objects.get(
@@ -92,7 +114,6 @@ class EnrollStudentAPI(generics.CreateAPIView,  generics.RetrieveAPIView):
         except Enrollment.DoesNotExist:
             return Response({"enrolled": False}, status=status.HTTP_200_OK)
 
+
 class GetStudentEnrollmentStatusAPI(generics.RetrieveAPIView):
     serializer_class = EnrollmentSerializer
-
-

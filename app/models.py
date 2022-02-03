@@ -45,7 +45,7 @@ class UserLesson(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     lesson = models.ForeignKey(Lesson, on_delete=models.CASCADE)
     completed = models.BooleanField(default=False)
-    completed_at = models.DateField()
+    completed_at = models.DateField(blank=True, null=True)
 
 class Quiz(TimeStampedModel):
     classroom = models.ForeignKey(
