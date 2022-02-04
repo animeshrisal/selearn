@@ -84,7 +84,7 @@ class UserLessonListAPI(generics.ListAPIView):
         return result
 
 
-class LessonRetrieveAPI(generics.RetrieveAPIView):
+class UserLessonRetrieveAPI(generics.RetrieveAPIView):
     serializer_class = LessonSerializer
 
     def retrieve(self, request, pk, lesson_pk):
