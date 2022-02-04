@@ -5,7 +5,7 @@ from rest_framework import viewsets, generics, filters, status, mixins
 from app import serializers
 
 from app.models import Classroom, Enrollment, Lesson, UserLesson
-from app.serializers import ClassroomSerializer, EnrollmentSerializer, LessonSerializer, UserLessonDetailSerializer, UserLessonSerializer
+from app.serializers import ClassroomSerializer, EnrollmentSerializer, LessonSerializer, UserCompletionSerializer, UserLessonDetailSerializer, UserLessonSerializer
 from rest_framework.response import Response
 
 from .shared.helpers import StandardResultsSetPagination
@@ -17,6 +17,8 @@ import sys
 
 from django.forms.models import model_to_dict
 from datetime import date
+
+
 
 
 from .queries import user_lesson_query, user_lesson_list_query
@@ -71,7 +73,7 @@ class LessonListCreateAPI(generics.ListCreateAPIView):
 
 
 class UserLessonListAPI(generics.ListAPIView):
-    queryset = Lesson.objects.all()
+    serializer_class = UserLessonSerializer
     pagination_class = StandardResultsSetPagination
 
     def list(self, request, pk,):
@@ -90,12 +92,11 @@ class UserLessonListAPI(generics.ListAPIView):
 
 
 class UserLessonRetrieveAPI(generics.RetrieveAPIView):
-    serializer_class = LessonSerializer
+    serializer_class = UserLessonDetailSerializer
 
     def retrieve(self, request, pk, lesson_pk):
         lesson = Lesson.objects.raw(user_lesson_query, params=[
                                     lesson_pk])[0]
-        print(lesson.completed_at)
         serializer = UserLessonDetailSerializer(lesson)
 
         return Response(serializer.data, status=status.HTTP_201_CREATED)
