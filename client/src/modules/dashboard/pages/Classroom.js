@@ -18,8 +18,12 @@ const Classroom = (props) => {
         () => dashboardService.getEnrollmentStatus(classroomId)
     )
 
-    const { isLoading: isLoadingLesson, data: dataLesson } = useQuery(["lessons"], () =>
-        dashboardService.getLessons(classroomId)
+    const isEnrolled = enrollmentStatus?.enrolled
+
+    const { isLoading: isLoadingLesson, data: dataLesson, isSuccess } = useQuery(["lessons"], () =>
+        dashboardService.getLessons(classroomId), {
+            enabled: !!isEnrolled
+        }
     );
 
     const mutation = useMutation(
@@ -71,7 +75,7 @@ const Classroom = (props) => {
                     </Grid>
                     <Grid item xs={8}>
                         {
-                            isLoadingLesson ? <CircularProgress /> : dataLesson.results.map((lesson) => (
+                            isSuccess ? dataLesson.results.map((lesson) => (
                                 <Accordion key={lesson.id}>
                                     <AccordionSummary
                                         expandIcon={<ExpandMoreIcon />}
@@ -79,6 +83,7 @@ const Classroom = (props) => {
                                         id="panel1a-header"
                                     >
                                         <Typography>{lesson.name}</Typography>
+                                        Completed
                                     </AccordionSummary>
                                     <AccordionDetails>
                                         <Typography>
@@ -89,7 +94,7 @@ const Classroom = (props) => {
                                         </Button>
                                     </AccordionDetails>
                                 </Accordion>
-                            ))
+                            )): <CircularProgress />
                         }
                     </Grid>
                     <Grid item xs={4}>
