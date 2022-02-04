@@ -21,14 +21,6 @@ import {
       });
   };
   
-  const getEnrollmentStatus = (id) => {
-    return fetch(`${URL}/dashboard/classroom/${id}/enroll`, authenticatedGetRequestOption())
-      .then(handleResponse)
-      .then((enrollment) => {
-        return enrollment;
-      })
-  }
-  
   const getLessons = (classroomId) => {
     return fetch(`${URL}/dashboard/classroom/${classroomId}/lesson`, authenticatedGetRequestOption())
       .then(handleResponse)
@@ -36,15 +28,7 @@ import {
         return classroom;
       })
   }
-  
-  const getUserLessons = (classroomId) => {
-    return fetch(`${URL}/dashboard/classroom/${classroomId}/user_lesson`, authenticatedGetRequestOption())
-      .then(handleResponse)
-      .then((classroom) => {
-        return classroom;
-      })
-  }
-  
+
   
   const getLesson = (classroomId, lessonId) => {
     return fetch(`${URL}/dashboard/classroom/${classroomId}/lesson/${lessonId}`, authenticatedGetRequestOption())
@@ -65,38 +49,25 @@ import {
         return classroom;
       });
   }
-  
-  const createEnrollment = (classroomId)  => {
+
+  const postLesson = (classroomId, lesson) => {
     return fetch(
-      `${URL}/dashboard/classroom/${classroomId}/enroll`,
-      authenticatedRequestGenerator({}, "POST")
-    )
-      .then(handleResponse)
-      .then((enrollment) => {
-        return enrollment;
-      });
+        `${URL}/dashboard/classroom/${classroomId}/lesson`,
+        authenticatedRequestGenerator(lesson, "POST")
+      )
+        .then(handleResponse)
+        .then((lesson) => {
+          return lesson;
+        });
   }
   
-  const completeLesson = (classroomId, lessonId) => {
-    return fetch(
-      `${URL}/dashboard/classroom/${classroomId}/lesson/${lessonId}/complete`,
-      authenticatedRequestGenerator({}, "POST")
-    )
-      .then(handleResponse)
-      .then((enrollment) => {
-        return enrollment;
-      });
-  }
-  
+
   export const teacherDashboardService = {
-    createEnrollment,
-    completeLesson,
     getClassrooms,
     getClassroom,
-    getEnrollmentStatus,
     postClassroom,
+    postLesson,
     getLessons,
     getLesson,
-    getUserLessons
   };
   

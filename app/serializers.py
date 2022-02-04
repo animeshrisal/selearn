@@ -46,7 +46,8 @@ class LessonSerializer(serializers.ModelSerializer):
     description = serializers.CharField()
     body = serializers.CharField()
     order = serializers.IntegerField(read_only=True)
-
+    previous = extend_schema_field(OpenApiTypes.INT)(serializers.PrimaryKeyRelatedField)(read_only=True)
+    next =extend_schema_field(OpenApiTypes.INT)(serializers.PrimaryKeyRelatedField)(read_only=True)
 
     def create(self, validated_data):
         with transaction.atomic():
@@ -100,6 +101,7 @@ class UserLessonDetailSerializer(serializers.Serializer):
     id = serializers.IntegerField()
     name = serializers.CharField()
     description = serializers.CharField()
+    body = serializers.CharField()
     order = serializers.IntegerField(read_only=True)
     completed = serializers.BooleanField()
     completed_at = serializers.DateField()

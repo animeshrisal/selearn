@@ -22,7 +22,7 @@ urlpatterns = [
     path('classroom/<int:pk>/',
          views.ClassroomViewSet.as_view({'get': 'retrieve', 'put': 'update', 'delete': 'destroy'}), name="classroom-detail"),
     path('classroom/<int:pk>/lesson', views.LessonListCreateAPI.as_view(), name="class_lesson"),
-    # path('classroom/<int:pk>/user_lesson', views.UserLessonListAPI.as_view(), name="user_lesson"),
+    path('classroom/<int:pk>/user_lesson', views.UserLessonListAPI.as_view(), name="user_lesson"),
     path('classroom/<int:pk>/lesson/<int:lesson_pk>', views.UserLessonRetrieveAPI.as_view(), name="lesson-detail"),
     
     path('classroom/<int:pk>/enroll', views.EnrollStudentAPI.as_view(), name="enroll"),
