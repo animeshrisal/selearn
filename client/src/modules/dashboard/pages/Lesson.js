@@ -16,10 +16,10 @@ const Lesson = (props) => {
 
     const completeLessonMutation = useMutation(
         () => dashboardService.completeLesson(classroomId, lessonId), {
-            onSuccess: () => {
-                refetch()
-            }
+        onSuccess: () => {
+            refetch()
         }
+    }
     );
 
     const completeLesson = () => {
@@ -30,6 +30,10 @@ const Lesson = (props) => {
         navigate(`/dashboard/classroom/${classroomId}/lesson/${data.next}`);
     };
 
+    const goToPreviousLesson = () => {
+        navigate(`/dashboard/classroom/${classroomId}/lesson/${data.previous}`);
+    };
+
     if (isLoading) {
         return <CircularProgress />;
     }
@@ -37,12 +41,15 @@ const Lesson = (props) => {
     if (data) {
         return (
             <Grid container spacing={2}>
-                <Grid item xs={10}>
+                <Grid item xs={8}>
                     <Typography gutterBottom variant="h3" component="div"> {data.name} </Typography>
                 </Grid>
-                <Grid item xs={2}>
+                <Grid item xs={4}>
+                    {data.previous && <Button onClick={goToPreviousLesson}>
+                        Previous lesson
+                    </Button>}
                     {data.next && <Button onClick={goToNextLesson}>
-                        Go to next lesson
+                        Next lesson
                     </Button>}
                 </Grid>
                 <Grid item xs={12}>
