@@ -60,7 +60,7 @@ class LessonListCreateAPI(generics.ListCreateAPIView):
         return result
 
     def create(self, request, pk):
-        context = {'teacher': request.user}
+        context = {'teacher': request.user, 'classroom_id': pk}
         serializer = LessonSerializer(data=request.data, context=context)
 
         if serializer.is_valid():

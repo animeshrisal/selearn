@@ -39,7 +39,9 @@ class Lesson(TimeStampedModel):
     name = models.CharField(max_length=200)
     description = models.TextField()
     body = models.TextField()
-
+    previous = models.ForeignKey('self', blank=True, null=True, related_name='previous_lesson', on_delete=models.SET_NULL)
+    next = models.ForeignKey('self', blank=True, null=True, related_name='next_lesson', on_delete=models.SET_NULL)
+    
     class Meta:
         unique_together = (('id', 'order'))
 

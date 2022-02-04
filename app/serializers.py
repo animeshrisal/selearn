@@ -43,21 +43,39 @@ class LessonSerializer(serializers.ModelSerializer):
     name = serializers.CharField()
     description = serializers.CharField()
     body = serializers.CharField()
-    order = serializers.IntegerField()
+    order = serializers.IntegerField(read_only=True)
+    previous = serializers.PrimaryKeyRelatedField(read_only=True)
+    next = serializers.PrimaryKeyRelatedField(read_only=True)
 
     def create(self, validated_data):
-        classroom = Lesson.objects.create(
-            name=validated_data['name'],
-            description=validated_data['description'],
-            body=validated_data['body'],
-            classroom=self.context['classroom']
-        )
+        with transaction.atomic():
+            classroom_lessons = Lesson.objects.filter(
+                classroom_id=self.context['classroom_id'])
 
-        return classroom
+            total_lesson_count = classroom_lessons.count()
+
+            if total_lesson_count > 0:
+                prev_lesson = classroom_lessons.last()
+                prev_lesson_id = prev_lesson.id
+
+            lesson = Lesson.objects.create(
+                name=validated_data['name'],
+                description=validated_data['description'],
+                body=validated_data['body'],
+                classroom_id=self.context['classroom_id'],
+                order=(total_lesson_count+1),
+                previous_id = prev_lesson_id
+            )
+            
+            if total_lesson_count > 0:
+                prev_lesson.next_id = lesson.id
+                prev_lesson.save()
+
+        return lesson
 
     class Meta:
         model = Lesson
-        fields = ('id', 'name', 'description', 'body', 'order')
+        fields = ('id', 'name', 'description', 'body', 'order', 'next', 'previous')
 
 
 class UserLessonSerializer(serializers.Serializer):
@@ -71,8 +89,12 @@ class UserLessonSerializer(serializers.Serializer):
     class Meta:
         fields = '__all__'
 
+
 class UserLessonDetailSerializer(UserLessonSerializer):
     body = serializers.CharField()
+    previous = serializers.IntegerField()
+    next = serializers.IntegerField()
+
     class Meta:
         fields = '__all__'
 
