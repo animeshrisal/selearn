@@ -5,6 +5,8 @@ from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
 from .models import Classroom, Comment, Lesson, Question, Quiz, User, UserLesson
 from django.db import transaction
+from drf_spectacular.types import OpenApiTypes
+from drf_spectacular.utils import extend_schema_field
 
 # Create your views here.
 
@@ -94,8 +96,17 @@ class UserLessonSerializer(serializers.Serializer):
         fields = ('id', 'name', 'description', 'body', 'order', 'next', 'previous')
 
 
-class UserLessonDetailSerializer(UserLessonSerializer):
-    body = serializers.CharField()
+class UserLessonDetailSerializer(serializers.Serializer):
+    id = serializers.IntegerField()
+    name = serializers.CharField()
+    description = serializers.CharField()
+    order = serializers.IntegerField(read_only=True)
+    completed = serializers.BooleanField()
+    completed_at = serializers.DateField()
+    order = serializers.IntegerField(read_only=True)
+    previous = extend_schema_field(OpenApiTypes.INT)(serializers.PrimaryKeyRelatedField)(read_only=True)
+    next =extend_schema_field(OpenApiTypes.INT)(serializers.PrimaryKeyRelatedField)(read_only=True)
+
 
     class Meta:
         fields = ('__all__')
@@ -143,12 +154,11 @@ class CommentSerializer(serializers.ModelSerializer):
         model = Comment
         fields = ('id', 'comment', 'created_at')
 
-class UserCompletionSerializer(serializers.ModelSerializer):
+class UserCompletionSerializer(serializers.Serializer):
     user = serializers.PrimaryKeyRelatedField(read_only=True)
     lesson = serializers.PrimaryKeyRelatedField(read_only=True)
     completed_at = serializers.DateField()
     completed = serializers.BooleanField()
 
     class Meta:
-        model = UserLesson
-        fields = ('__all__')
+        fields = '__all__'
