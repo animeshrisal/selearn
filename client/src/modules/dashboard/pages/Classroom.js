@@ -5,6 +5,8 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { dashboardService } from '../DashboardService';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { Box } from '@mui/system';
+import RadioButtonUncheckedIcon from '@mui/icons-material/RadioButtonUnchecked';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 
 const Classroom = (props) => {
     const { classroomId } = useParams();
@@ -20,7 +22,7 @@ const Classroom = (props) => {
     const isEnrolled = enrollmentStatus?.enrolled
 
     const { data: dataLesson, isSuccess } = useQuery(["lessons"], () =>
-        dashboardService.getLessons(classroomId), {
+        dashboardService.getUserLessons(classroomId), {
         //Get lessons if user is enrolled
         enabled: !!isEnrolled
     }
@@ -75,15 +77,24 @@ const Classroom = (props) => {
                     </Grid>
                     <Grid item xs={8}>
                         {
-                             isEnrolled ? isSuccess ? dataLesson.results.map((lesson) => (
+                            isEnrolled ? isSuccess ? dataLesson.results.map((lesson) => (
                                 <Accordion key={lesson.id}>
                                     <AccordionSummary
                                         expandIcon={<ExpandMoreIcon />}
                                         aria-controls="panel1a-content"
                                         id="panel1a-header"
                                     >
-                                        <Typography>{lesson.name}</Typography>
-                                        Completed
+                                        <Grid container direction="row"
+                                            justifyContent="space-between"
+                                            alignItems="center">
+                                            <Grid item>
+                                                <Typography>{lesson.name}</Typography>
+                                            </Grid>
+                                            <Grid item>
+                                                { lesson.completed ? <CheckCircleIcon /> : <RadioButtonUncheckedIcon /> }
+                                            </Grid>
+
+                                        </Grid>
                                     </AccordionSummary>
                                     <AccordionDetails>
                                         <Typography>
@@ -95,7 +106,7 @@ const Classroom = (props) => {
                                     </AccordionDetails>
                                 </Accordion>
                             )) : <CircularProgress /> :
-                            <Box>Please enroll in the class to see the lessons</Box>
+                                <Box>Please enroll in the class to see the lessons</Box>
                         }
                     </Grid>
                     <Grid item xs={4}>

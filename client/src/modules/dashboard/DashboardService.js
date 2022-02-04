@@ -37,6 +37,15 @@ const getLessons = (classroomId) => {
     })
 }
 
+const getUserLessons = (classroomId) => {
+  return fetch(`${URL}/dashboard/classroom/${classroomId}/user_lesson`, authenticatedGetRequestOption())
+    .then(handleResponse)
+    .then((classroom) => {
+      return classroom;
+    })
+}
+
+
 const getLesson = (classroomId, lessonId) => {
   return fetch(`${URL}/dashboard/classroom/${classroomId}/lesson/${lessonId}`, authenticatedGetRequestOption())
     .then(handleResponse)
@@ -75,5 +84,6 @@ export const dashboardService = {
   getEnrollmentStatus,
   postClassroom,
   getLessons,
-  getLesson
+  getLesson,
+  getUserLessons
 };

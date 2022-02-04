@@ -15,6 +15,10 @@ from django.db import transaction
 import traceback
 import sys
 
+from django.forms.models import model_to_dict
+
+from .queries import user_lesson_query
+
 # Create your views here.
 
 
@@ -63,17 +67,19 @@ class LessonListCreateAPI(generics.ListCreateAPIView):
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+
 class UserLessonListAPI(generics.ListAPIView):
     queryset = Lesson.objects.all()
     serializer_class = UserLessonSerializer
     pagination_class = StandardResultsSetPagination
 
     def list(self, request, pk):
-        lesson = Lesson.objects.prefetch_related('userlesson_set').filter(classroom_id=pk)
+        lesson = Lesson.objects.raw(user_lesson_query.format(pk, request.user.id))
         page = self.paginate_queryset(lesson)
         serializer = UserLessonSerializer(page, many=True)
         result = self.get_paginated_response(serializer.data)
         return result
+
 
 class LessonRetrieveAPI(generics.RetrieveAPIView):
     serializer_class = LessonSerializer
@@ -95,8 +101,9 @@ class EnrollStudentAPI(generics.CreateAPIView,  generics.RetrieveAPIView):
                     user_id=request.user.id, classroom_id=pk)
                 serializer = EnrollmentSerializer(enrollment)
 
-                lesson_ids = list(Lesson.objects.filter(classroom_id=pk).values_list('id', flat=True))
-                
+                lesson_ids = list(Lesson.objects.filter(
+                    classroom_id=pk).values_list('id', flat=True))
+
                 user_lessons = []
 
                 for lesson_id in lesson_ids:
@@ -113,7 +120,7 @@ class EnrollStudentAPI(generics.CreateAPIView,  generics.RetrieveAPIView):
         except Exception:
             print(traceback.format_exc())
             return Response({"error": "Could not enroll user"}, status=status.HTTP_400_BAD_REQUEST)
-            
+
     def retrieve(self, request, pk):
         try:
             enrollment = Enrollment.objects.get(

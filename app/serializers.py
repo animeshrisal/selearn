@@ -64,11 +64,11 @@ class UserLessonSerializer(serializers.Serializer):
     name = serializers.CharField()
     description = serializers.CharField()
     order = serializers.IntegerField()
-    completed = serializers.SerializerMethodField()
+    completed = serializers.BooleanField()
+    completed_at = serializers.DateField()
 
-    def get_completed(self, obj):
-        return True if obj.completed_at is not None else False
-
+    class Meta:
+        fields = '__all__'
 
 class EnrollmentSerializer(serializers.Serializer):
     enrolled_at = serializers.DateField(read_only=True)
