@@ -72,7 +72,6 @@ class LessonListCreateAPI(generics.ListCreateAPIView):
 
 class UserLessonListAPI(generics.ListAPIView):
     queryset = Lesson.objects.all()
-    serializer_class = UserLessonSerializer
     pagination_class = StandardResultsSetPagination
 
     def list(self, request, pk,):
@@ -131,8 +130,6 @@ class EnrollStudentAPI(generics.CreateAPIView,  generics.RetrieveAPIView):
 
 
 class CompleteLessonAPI(generics.CreateAPIView):
-    serializer_class = UserLessonSerializer
-
     def post(self, request, pk, lesson_pk):
         try:
             user_lesson = UserLesson.objects.create(

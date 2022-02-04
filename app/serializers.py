@@ -91,14 +91,14 @@ class UserLessonSerializer(serializers.Serializer):
     next = serializers.PrimaryKeyRelatedField(read_only=True)
 
     class Meta:
-        fields = '__all__'
+        fields = ('id', 'name', 'description', 'body', 'order', 'next', 'previous')
 
 
 class UserLessonDetailSerializer(UserLessonSerializer):
     body = serializers.CharField()
 
     class Meta:
-        fields = '__all__'
+        fields = ('__all__')
 
 
 class EnrollmentSerializer(serializers.Serializer):
@@ -110,7 +110,7 @@ class EnrollmentSerializer(serializers.Serializer):
         return True if obj.enrolled_at is not None else False
 
     class Meta:
-        fields = '__all__'
+        fields = ('__all__')
 
 
 class QuizSerializer(serializers.ModelSerializer):
@@ -151,4 +151,4 @@ class UserCompletionSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = UserLesson
-        fields = '__all__'
+        fields = ('__all__')
