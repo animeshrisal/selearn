@@ -1,11 +1,10 @@
-import { Accordion, AccordionDetails, AccordionSummary, Avatar, Button, Card, CardActions, CardContent, CardHeader, CardMedia, CircularProgress, Container, Grid, IconButton, Typography } from '@mui/material';
-import React, { useState } from 'react';
-import { Mutation, useMutation, useQuery } from 'react-query';
+import { Accordion, AccordionDetails, AccordionSummary, Avatar, Button, Card, CardContent, CardHeader, CardMedia, CircularProgress, Container, Grid, Typography } from '@mui/material';
+import React from 'react';
+import { useMutation, useQuery } from 'react-query';
 import { useNavigate, useParams } from 'react-router-dom';
 import { dashboardService } from '../DashboardService';
-import SendIcon from '@mui/icons-material/Send';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import MoreVertIcon from '@mui/icons-material/MoreVert';
+import { Box } from '@mui/system';
 
 const Classroom = (props) => {
     const { classroomId } = useParams();
@@ -20,16 +19,17 @@ const Classroom = (props) => {
 
     const isEnrolled = enrollmentStatus?.enrolled
 
-    const { isLoading: isLoadingLesson, data: dataLesson, isSuccess } = useQuery(["lessons"], () =>
+    const { data: dataLesson, isSuccess } = useQuery(["lessons"], () =>
         dashboardService.getLessons(classroomId), {
-            enabled: !!isEnrolled
-        }
+        //Get lessons if user is enrolled
+        enabled: !!isEnrolled
+    }
     );
 
     const mutation = useMutation(
         () => dashboardService.createEnrollment(classroomId),
         {
-            onSuccess: (mutation) => {
+            onSuccess: () => {
                 refetch()
             },
         }
@@ -75,7 +75,7 @@ const Classroom = (props) => {
                     </Grid>
                     <Grid item xs={8}>
                         {
-                            isSuccess ? dataLesson.results.map((lesson) => (
+                             isEnrolled ? isSuccess ? dataLesson.results.map((lesson) => (
                                 <Accordion key={lesson.id}>
                                     <AccordionSummary
                                         expandIcon={<ExpandMoreIcon />}
@@ -94,7 +94,8 @@ const Classroom = (props) => {
                                         </Button>
                                     </AccordionDetails>
                                 </Accordion>
-                            )): <CircularProgress />
+                            )) : <CircularProgress /> :
+                            <Box>Please enroll in the class to see the lessons</Box>
                         }
                     </Grid>
                     <Grid item xs={4}>
