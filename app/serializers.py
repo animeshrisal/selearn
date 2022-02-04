@@ -17,6 +17,7 @@ class UserSerializer(serializers.ModelSerializer):
         model = User
         fields = ('id', 'username')
 
+
 class ClassroomSerializer(serializers.ModelSerializer):
     subject = serializers.CharField(required=True)
     description = serializers.CharField()
@@ -36,6 +37,7 @@ class ClassroomSerializer(serializers.ModelSerializer):
     class Meta:
         model = Classroom
         fields = ('id', 'subject', 'description', 'banner', 'teacher')
+
 
 class LessonSerializer(serializers.ModelSerializer):
     name = serializers.CharField()
@@ -57,6 +59,17 @@ class LessonSerializer(serializers.ModelSerializer):
         model = Lesson
         fields = ('id', 'name', 'description', 'body', 'order')
 
+
+class UserLessonSerializer(serializers.Serializer):
+    name = serializers.CharField()
+    description = serializers.CharField()
+    order = serializers.IntegerField()
+    completed = serializers.SerializerMethodField()
+
+    def get_completed(self, obj):
+        return True if obj.completed_at is not None else False
+
+
 class EnrollmentSerializer(serializers.Serializer):
     enrolled_at = serializers.DateField(read_only=True)
     completed_at = serializers.DateField(read_only=True)
@@ -68,13 +81,15 @@ class EnrollmentSerializer(serializers.Serializer):
     class Meta:
         fields = '__all__'
 
+
 class QuizSerializer(serializers.ModelSerializer):
     created_at = serializers.DateTimeField()
     name = serializers.CharField()
-    
+
     class Meta:
         model = Quiz
         fields = ('id', 'name', 'created_at')
+
 
 class QuestionSerializer(serializers.ModelSerializer):
     question = serializers.CharField()
@@ -85,7 +100,8 @@ class QuestionSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Question
-        fields = ('id', 'question', 'first_choice', 'third_choice', 'fourth_choice')
+        fields = ('id', 'question', 'first_choice',
+                  'third_choice', 'fourth_choice')
 
 
 class CommentSerializer(serializers.ModelSerializer):

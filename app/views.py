@@ -5,7 +5,7 @@ from rest_framework import viewsets, generics, filters, status, mixins
 from app import serializers
 
 from app.models import Classroom, Enrollment, Lesson, UserLesson
-from app.serializers import ClassroomSerializer, EnrollmentSerializer, LessonSerializer
+from app.serializers import ClassroomSerializer, EnrollmentSerializer, LessonSerializer, UserLessonSerializer
 from rest_framework.response import Response
 
 from .shared.helpers import StandardResultsSetPagination
@@ -47,9 +47,8 @@ class LessonListCreateAPI(generics.ListCreateAPIView):
     pagination_class = StandardResultsSetPagination
 
     def list(self, request, pk):
-        queryset = self.queryset.filter(
-            classroom_id=pk).select_related().order_by('order')
-        page = self.paginate_queryset(queryset)
+        lesson = Lesson.objects.filter(classroom_id=pk)
+        page = self.paginate_queryset(lesson)
         serializer = LessonSerializer(page, many=True)
         result = self.get_paginated_response(serializer.data)
         return result
@@ -64,6 +63,17 @@ class LessonListCreateAPI(generics.ListCreateAPIView):
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+class UserLessonListAPI(generics.ListAPIView):
+    queryset = Lesson.objects.all()
+    serializer_class = UserLessonSerializer
+    pagination_class = StandardResultsSetPagination
+
+    def list(self, request, pk):
+        lesson = Lesson.objects.prefetch_related('userlesson_set').filter(classroom_id=pk)
+        page = self.paginate_queryset(lesson)
+        serializer = UserLessonSerializer(page, many=True)
+        result = self.get_paginated_response(serializer.data)
+        return result
 
 class LessonRetrieveAPI(generics.RetrieveAPIView):
     serializer_class = LessonSerializer
