@@ -16,6 +16,8 @@ import traceback
 import sys
 
 from django.forms.models import model_to_dict
+from datetime import date
+
 
 from .queries import user_lesson_query
 
@@ -132,5 +134,16 @@ class EnrollStudentAPI(generics.CreateAPIView,  generics.RetrieveAPIView):
             return Response({"enrolled": False}, status=status.HTTP_200_OK)
 
 
-class GetStudentEnrollmentStatusAPI(generics.RetrieveAPIView):
-    serializer_class = EnrollmentSerializer
+class CompleteLessonAPI(generics.UpdateAPIView):
+    serializer_class = UserLessonSerializer
+
+    def update(self, request, pk, lesson_pk):
+        try:
+            user_lesson = UserLesson.objects.get(user_id=request.user.id, lesson_id=lesson_pk)
+            user_lesson.completed = True
+            user_lesson.completed_at = date.today()
+            user_lesson.save()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        except Exception:
+            return Response({"error": "Could not complete lesson"})
+
