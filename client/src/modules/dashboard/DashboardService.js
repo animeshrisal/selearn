@@ -80,7 +80,7 @@ const createEnrollment = (classroomId)  => {
 const completeLesson = (classroomId, lessonId) => {
   return fetch(
     `${URL}/dashboard/classroom/${classroomId}/lesson/${lessonId}/complete`,
-    authenticatedRequestGenerator({}, "PUT")
+    authenticatedRequestGenerator({}, "POST")
   )
     .then(handleResponse)
     .then((enrollment) => {

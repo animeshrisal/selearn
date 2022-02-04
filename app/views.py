@@ -75,20 +75,18 @@ class UserLessonListAPI(generics.ListAPIView):
     serializer_class = UserLessonSerializer
     pagination_class = StandardResultsSetPagination
 
-    def list(self, request, pk):
+    def list(self, request, pk,):
         try:
-            user_lesson_ids = tuple(Lesson.objects.filter(
-                classroom_id=pk).values_list('id', flat=True))
-
             lesson_list = Lesson.objects.raw(user_lesson_list_query, params=[
-                user_lesson_ids, request.user.id])
-
+                pk])
+ 
             page = self.paginate_queryset(lesson_list)
             serializer = UserLessonSerializer(page, many=True)
             result = self.get_paginated_response(serializer.data)
 
             return result
         except Exception as e:
+            print(e)
             return Response({"error": "Could not load your lessons"}, status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -97,7 +95,8 @@ class UserLessonRetrieveAPI(generics.RetrieveAPIView):
 
     def retrieve(self, request, pk, lesson_pk):
         lesson = Lesson.objects.raw(user_lesson_query, params=[
-                                    lesson_pk, request.user.id])[0]
+                                    lesson_pk])[0]
+        print(lesson.completed_at)
         serializer = UserLessonDetailSerializer(lesson)
 
         return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -112,19 +111,6 @@ class EnrollStudentAPI(generics.CreateAPIView,  generics.RetrieveAPIView):
                 enrollment = Enrollment.objects.create(
                     user_id=request.user.id, classroom_id=pk)
                 serializer = EnrollmentSerializer(enrollment)
-
-                lesson_ids = list(Lesson.objects.filter(
-                    classroom_id=pk).values_list('id', flat=True))
-
-                user_lessons = []
-
-                for lesson_id in lesson_ids:
-                    user_lessons.append(UserLesson(
-                        user_id=request.user.id,
-                        lesson_id=lesson_id
-                    ))
-
-                UserLesson.objects.bulk_create(user_lessons)
 
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
         except IntegrityError:
@@ -144,16 +130,18 @@ class EnrollStudentAPI(generics.CreateAPIView,  generics.RetrieveAPIView):
             return Response({"enrolled": False}, status=status.HTTP_200_OK)
 
 
-class CompleteLessonAPI(generics.UpdateAPIView):
+class CompleteLessonAPI(generics.CreateAPIView):
     serializer_class = UserLessonSerializer
 
-    def update(self, request, pk, lesson_pk):
+    def post(self, request, pk, lesson_pk):
         try:
-            user_lesson = UserLesson.objects.get(
-                user_id=request.user.id, lesson_id=lesson_pk)
-            user_lesson.completed = True
-            user_lesson.completed_at = date.today()
-            user_lesson.save()
+            user_lesson = UserLesson.objects.create(
+                user_id=request.user.id, 
+                lesson_id=lesson_pk, 
+                completed=True
+            )
             return Response(status=status.HTTP_204_NO_CONTENT)
-        except Exception:
-            return Response({"error": "Could not complete lesson"})
+        except IntegrityError:
+            return Response({"error": "You have already completed this lesson"}, status=status.HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            return Response({"error": "Could not complete lesson"}, status=status.HTTP_400_BAD_REQUEST)

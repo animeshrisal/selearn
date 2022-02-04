@@ -3,7 +3,7 @@ from urllib import request
 from django.shortcuts import render
 from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
-from .models import Classroom, Comment, Lesson, Question, Quiz, User
+from .models import Classroom, Comment, Lesson, Question, Quiz, User, UserLesson
 from django.db import transaction
 
 # Create your views here.
@@ -142,3 +142,13 @@ class CommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Comment
         fields = ('id', 'comment', 'created_at')
+
+class UserCompletionSerializer(serializers.ModelSerializer):
+    user = serializers.PrimaryKeyRelatedField(read_only=True)
+    lesson = serializers.PrimaryKeyRelatedField(read_only=True)
+    completed_at = serializers.DateField()
+    completed = serializers.BooleanField()
+
+    class Meta:
+        model = UserLesson
+        fields = '__all__'
