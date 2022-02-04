@@ -1,40 +1,14 @@
-import { Container, Fab, Grid, Paper } from '@mui/material';
+import { Grid } from '@mui/material';
 import React, { useState } from 'react';
 import ClassroomCard from '../components/ClassroomCard';
-import AddIcon from '@mui/icons-material/Add';
-import { useMatch, useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useMutation, useQuery } from 'react-query';
 import { dashboardService } from '../DashboardService';
-import Dialog from '@mui/material/Dialog';
-import AddClassroomDialogue from '../components/AddClassroomDialogue';
+
 
 const ClassroomList = (props) => {
     const navigate = useNavigate();
-    let { url } = useParams();
     const { isLoading, data } = useQuery("getFeed", dashboardService.getClassrooms);
-
-    const mutation = useMutation(
-        (classroom) => dashboardService.postClassroom(classroom),
-        {
-            onSuccess: (mutation) => {
-                console.log("AA")
-            },
-        }
-    );
-    const [openModal, setOpenModal] = useState(false)
-
-    const handleClickOpen = () => {
-        setOpenModal(true);
-    };
-
-    const handleClose = () => {
-        setOpenModal(false);
-    };
-
-    const addClassroom = (classroom) => {
-        console.log(classroom)
-        mutation.mutate(classroom)
-    }
 
     const goToClassroomPage = (id) => {
         navigate(`${id}`);
