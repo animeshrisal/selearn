@@ -76,19 +76,28 @@ class UserLessonListAPI(generics.ListAPIView):
     pagination_class = StandardResultsSetPagination
 
     def list(self, request, pk):
-        user_lesson_ids = tuple(Lesson.objects.filter(classroom_id = pk).values_list('id', flat=True))
-        lesson_list = Lesson.objects.raw(user_lesson_list_query, params=[user_lesson_ids, request.user.id])
-        page = self.paginate_queryset(lesson_list)
-        serializer = UserLessonSerializer(page, many=True)
-        result = self.get_paginated_response(serializer.data)
-        return result
+        try:
+            user_lesson_ids = tuple(Lesson.objects.filter(
+                classroom_id=pk).values_list('id', flat=True))
+
+            lesson_list = Lesson.objects.raw(user_lesson_list_query, params=[
+                user_lesson_ids, request.user.id])
+
+            page = self.paginate_queryset(lesson_list)
+            serializer = UserLessonSerializer(page, many=True)
+            result = self.get_paginated_response(serializer.data)
+
+            return result
+        except Exception:
+            return Response({"error": "Could not load your lessons"}, status=status.HTTP_400_BAD_REQUEST)
 
 
 class UserLessonRetrieveAPI(generics.RetrieveAPIView):
     serializer_class = LessonSerializer
 
     def retrieve(self, request, pk, lesson_pk):
-        lesson = Lesson.objects.raw(user_lesson_query, params=[lesson_pk, request.user.id])[0]
+        lesson = Lesson.objects.raw(user_lesson_query, params=[
+                                    lesson_pk, request.user.id])[0]
         serializer = UserLessonDetailSerializer(lesson)
 
         return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -140,11 +149,11 @@ class CompleteLessonAPI(generics.UpdateAPIView):
 
     def update(self, request, pk, lesson_pk):
         try:
-            user_lesson = UserLesson.objects.get(user_id=request.user.id, lesson_id=lesson_pk)
+            user_lesson = UserLesson.objects.get(
+                user_id=request.user.id, lesson_id=lesson_pk)
             user_lesson.completed = True
             user_lesson.completed_at = date.today()
             user_lesson.save()
             return Response(status=status.HTTP_204_NO_CONTENT)
         except Exception:
             return Response({"error": "Could not complete lesson"})
-

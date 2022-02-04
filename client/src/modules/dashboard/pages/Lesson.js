@@ -1,6 +1,6 @@
 import { Button, CircularProgress, Container, Grid, Paper, Typography } from '@mui/material';
 import React, { useState } from 'react';
-import { useQuery } from 'react-query';
+import { useMutation, useQuery } from 'react-query';
 import { useParams } from 'react-router-dom';
 import { dashboardService } from '../DashboardService';
 import ReactMarkdown from 'react-markdown'
@@ -11,6 +11,14 @@ const Lesson = (props) => {
     const { isLoading, data } = useQuery(["lesson", lessonId], () =>
         dashboardService.getLesson(classroomId, lessonId)
     );
+
+    const completeLessonMutation = useMutation(
+        () => dashboardService.completeLesson(classroomId, lessonId)
+    );
+
+    const completeLesson = () => {
+        completeLessonMutation.mutate()
+    }
 
     if (isLoading) {
         return <CircularProgress />;
@@ -31,7 +39,7 @@ const Lesson = (props) => {
                     {data.description}
                 </Grid>
                 <Grid item xs={12}>
-                    <Paper variant="outlined" 
+                    <Paper variant="outlined"
                         className="markdown-content"
                         sx={{
                             padding: 5,
@@ -42,7 +50,7 @@ const Lesson = (props) => {
                     </Paper>
                 </Grid>
                 <Grid item xs={2}>
-                    <Button>Complete lesson</Button>
+                    {!data.completed && <Button onClick={completeLesson}>Complete lesson</Button>}
                 </Grid>
             </Grid>
         )

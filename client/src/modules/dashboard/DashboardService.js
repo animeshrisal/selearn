@@ -77,8 +77,20 @@ const createEnrollment = (classroomId)  => {
     });
 }
 
+const completeLesson = (classroomId, lessonId) => {
+  return fetch(
+    `${URL}/dashboard/classroom/${classroomId}/lesson/${lessonId}/complete`,
+    authenticatedRequestGenerator({}, "PUT")
+  )
+    .then(handleResponse)
+    .then((enrollment) => {
+      return enrollment;
+    });
+}
+
 export const dashboardService = {
   createEnrollment,
+  completeLesson,
   getClassrooms,
   getClassroom,
   getEnrollmentStatus,
