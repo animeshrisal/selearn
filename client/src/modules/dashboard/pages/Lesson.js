@@ -8,12 +8,16 @@ import "./Lesson.scss";
 
 const Lesson = (props) => {
     const { classroomId, lessonId } = useParams();
-    const { isLoading, data } = useQuery(["lesson", lessonId], () =>
+    const { isLoading, data, refetch } = useQuery(["lesson", lessonId], () =>
         dashboardService.getLesson(classroomId, lessonId)
     );
 
     const completeLessonMutation = useMutation(
-        () => dashboardService.completeLesson(classroomId, lessonId)
+        () => dashboardService.completeLesson(classroomId, lessonId), {
+            onSuccess: () => {
+                refetch()
+            }
+        }
     );
 
     const completeLesson = () => {

@@ -95,8 +95,6 @@ class UserLessonSerializer(serializers.Serializer):
 
 class UserLessonDetailSerializer(UserLessonSerializer):
     body = serializers.CharField()
-    previous = serializers.IntegerField()
-    next = serializers.IntegerField()
 
     class Meta:
         fields = '__all__'
