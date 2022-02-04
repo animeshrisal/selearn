@@ -1,8 +1,8 @@
 import { Grid } from '@mui/material';
-import React, { useState } from 'react';
-import ClassroomCard from '../components/ClassroomCard';
-import { useNavigate, useParams } from 'react-router-dom';
-import { useMutation, useQuery } from 'react-query';
+import React from 'react';
+import ClassroomCard from '../../shared/components/ClassroomCard';
+import { useNavigate } from 'react-router-dom';
+import { useQuery } from 'react-query';
 import { dashboardService } from '../DashboardService';
 
 

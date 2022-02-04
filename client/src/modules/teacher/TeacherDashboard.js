@@ -1,12 +1,13 @@
 import { Container } from "@mui/material";
 import React from "react";
 import { Outlet } from "react-router-dom";
+
 import NavBar from "./components/NavBar";
 
 import './styles/classroom.scss'
 
 
-const Dashboard = () => {
+const TeacherDashboard = () => {
     return (
         <React.Fragment>
             <NavBar />
@@ -16,4 +17,4 @@ const Dashboard = () => {
         </React.Fragment>
     );
 };
-export default Dashboard;
+export default TeacherDashboard;

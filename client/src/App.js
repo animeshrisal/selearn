@@ -12,6 +12,8 @@ import Feed from "./modules/dashboard/pages/Feed";
 import Classroom from "./modules/dashboard/pages/Classroom";
 import ClassroomList from "./modules/dashboard/pages/ClassroomList";
 import Lesson from "./modules/dashboard/pages/Lesson";
+import TeacherDashboard from "./modules/teacher/TeacherDashboard";
+import TeacherClassList from "./modules/teacher/pages/TeacherClassList";
 const queryClient = new QueryClient();
 
 function App() {
@@ -50,7 +52,15 @@ function App() {
                   </PrivateRoute>
                 } />
               </Route>
-
+              <Route path="/teacher/" element={<PrivateRoute>
+                <TeacherDashboard />
+              </PrivateRoute>}>
+                <Route path="classroom/" element={
+                  <PrivateRoute>
+                    <TeacherClassList />
+                  </PrivateRoute>
+                } />
+              </Route>
             </Routes>
           </BrowserRouter>
         </QueryClientProvider>

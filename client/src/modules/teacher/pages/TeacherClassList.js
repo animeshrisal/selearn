@@ -1,20 +1,18 @@
-import { Container, Fab, Grid, Paper } from '@mui/material';
+import { Fab, Grid } from '@mui/material';
 import React, { useState } from 'react';
-import ClassroomCard from '../components/ClassroomCard';
+import ClassroomCard from '../../shared/components/ClassroomCard';
 import AddIcon from '@mui/icons-material/Add';
-import { useMatch, useNavigate, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useMutation, useQuery } from 'react-query';
-import { dashboardService } from '../DashboardService';
-import Dialog from '@mui/material/Dialog';
+import { teacherDashboardService } from '../TeacherDashboardService';
 import AddClassroomDialogue from '../components/AddClassroomDialogue';
 
-const ClassroomList = (props) => {
+const TeacherClassList = (props) => {
     const navigate = useNavigate();
-    let { url } = useParams();
-    const { isLoading, data } = useQuery("getFeed", dashboardService.getClassrooms);
+    const { isLoading, data } = useQuery("getFeed", teacherDashboardService.getClassrooms);
 
     const mutation = useMutation(
-        (classroom) => dashboardService.postClassroom(classroom),
+        (classroom) => teacherDashboardService.postClassroom(classroom),
         {
             onSuccess: (mutation) => {
                 console.log("AA")
@@ -70,5 +68,5 @@ const ClassroomList = (props) => {
     }
 }
 
-export default ClassroomList
+export default TeacherClassList
 
