@@ -30,7 +30,7 @@ class ClassroomViewSet(viewsets.ModelViewSet):
     pagination_class = StandardResultsSetPagination
 
     def list(self, request):
-        queryset = self.queryset.order_by('-created_at')
+        queryset = self.queryset.filter(is_active=True).order_by('-created_at')
         page = self.paginate_queryset(queryset)
         serializer = ClassroomSerializer(page, many=True)
         result = self.get_paginated_response(serializer.data)
