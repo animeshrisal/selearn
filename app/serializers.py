@@ -43,6 +43,7 @@ class LessonSerializer(serializers.ModelSerializer):
     name = serializers.CharField()
     description = serializers.CharField()
     body = serializers.CharField()
+    order = serializers.IntegerField(read_only=True)
 
 
     def create(self, validated_data):
@@ -82,7 +83,7 @@ class UserLessonSerializer(serializers.Serializer):
     id = serializers.IntegerField()
     name = serializers.CharField()
     description = serializers.CharField()
-    order = serializers.IntegerField()
+    order = serializers.IntegerField(read_only=True)
     completed = serializers.BooleanField()
     completed_at = serializers.DateField()
     order = serializers.IntegerField(read_only=True)

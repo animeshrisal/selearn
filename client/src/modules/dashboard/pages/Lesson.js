@@ -1,7 +1,7 @@
 import { Button, CircularProgress, Container, Grid, Paper, Typography } from '@mui/material';
 import React, { useState } from 'react';
 import { useMutation, useQuery } from 'react-query';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { dashboardService } from '../DashboardService';
 import ReactMarkdown from 'react-markdown'
 import "./Lesson.scss";
@@ -11,6 +11,8 @@ const Lesson = (props) => {
     const { isLoading, data, refetch } = useQuery(["lesson", lessonId], () =>
         dashboardService.getLesson(classroomId, lessonId)
     );
+
+    const navigate = useNavigate();
 
     const completeLessonMutation = useMutation(
         () => dashboardService.completeLesson(classroomId, lessonId), {
@@ -24,6 +26,10 @@ const Lesson = (props) => {
         completeLessonMutation.mutate()
     }
 
+    const goToNextLesson = () => {
+        navigate(`/dashboard/classroom/${classroomId}/lesson/${data.next}`);
+    };
+
     if (isLoading) {
         return <CircularProgress />;
     }
@@ -35,9 +41,9 @@ const Lesson = (props) => {
                     <Typography gutterBottom variant="h3" component="div"> {data.name} </Typography>
                 </Grid>
                 <Grid item xs={2}>
-                    <Button>
+                    {data.next && <Button onClick={goToNextLesson}>
                         Go to next lesson
-                    </Button>
+                    </Button>}
                 </Grid>
                 <Grid item xs={12}>
                     {data.description}

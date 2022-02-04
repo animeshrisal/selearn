@@ -88,7 +88,7 @@ class UserLessonListAPI(generics.ListAPIView):
             result = self.get_paginated_response(serializer.data)
 
             return result
-        except Exception:
+        except Exception as e:
             return Response({"error": "Could not load your lessons"}, status=status.HTTP_400_BAD_REQUEST)
 
 
