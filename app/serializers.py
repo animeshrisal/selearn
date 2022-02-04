@@ -71,6 +71,12 @@ class UserLessonSerializer(serializers.Serializer):
     class Meta:
         fields = '__all__'
 
+class UserLessonDetailSerializer(UserLessonSerializer):
+    body = serializers.CharField()
+    class Meta:
+        fields = '__all__'
+
+
 class EnrollmentSerializer(serializers.Serializer):
     enrolled_at = serializers.DateField(read_only=True)
     completed_at = serializers.DateField(read_only=True)

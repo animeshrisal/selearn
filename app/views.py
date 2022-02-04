@@ -5,7 +5,7 @@ from rest_framework import viewsets, generics, filters, status, mixins
 from app import serializers
 
 from app.models import Classroom, Enrollment, Lesson, UserLesson
-from app.serializers import ClassroomSerializer, EnrollmentSerializer, LessonSerializer, UserLessonSerializer
+from app.serializers import ClassroomSerializer, EnrollmentSerializer, LessonSerializer, UserLessonDetailSerializer, UserLessonSerializer
 from rest_framework.response import Response
 
 from .shared.helpers import StandardResultsSetPagination
@@ -19,7 +19,7 @@ from django.forms.models import model_to_dict
 from datetime import date
 
 
-from .queries import user_lesson_query
+from .queries import user_lesson_query, user_lesson_list_query
 
 # Create your views here.
 
@@ -76,8 +76,9 @@ class UserLessonListAPI(generics.ListAPIView):
     pagination_class = StandardResultsSetPagination
 
     def list(self, request, pk):
-        lesson = Lesson.objects.raw(user_lesson_query.format(pk, request.user.id))
-        page = self.paginate_queryset(lesson)
+        user_lesson_ids = tuple(Lesson.objects.filter(classroom_id = pk).values_list('id', flat=True))
+        lesson_list = Lesson.objects.raw(user_lesson_list_query, params=[user_lesson_ids, request.user.id])
+        page = self.paginate_queryset(lesson_list)
         serializer = UserLessonSerializer(page, many=True)
         result = self.get_paginated_response(serializer.data)
         return result
@@ -87,8 +88,8 @@ class LessonRetrieveAPI(generics.RetrieveAPIView):
     serializer_class = LessonSerializer
 
     def retrieve(self, request, pk, lesson_pk):
-        queryset = Lesson.objects.get(pk=lesson_pk)
-        serializer = LessonSerializer(queryset)
+        lesson = Lesson.objects.raw(user_lesson_query, params=[lesson_pk, request.user.id])[0]
+        serializer = UserLessonDetailSerializer(lesson)
 
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
