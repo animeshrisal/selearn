@@ -60,7 +60,7 @@ const Lesson = (props) => {
                         className="markdown-content"
                         sx={{
                             padding: 5,
-                            width: 100
+                            width: '60rem'
                         }}
                     >
                         <ReactMarkdown>{data.body}</ReactMarkdown>
