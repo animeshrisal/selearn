@@ -19,6 +19,9 @@ class Classroom(TimeStampedModel):
     banner = models.ImageField(
         upload_to="banners", default="banners/default.png")
 
+    def __str__(self):
+        return self.subject
+
 class Enrollment(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     classroom = models.ForeignKey(Classroom, on_delete=models.CASCADE)
@@ -41,6 +44,10 @@ class Lesson(TimeStampedModel):
         unique_together = (('id', 'order'))
 
 
+    def __str__(self):
+        return self.name
+
+
 class UserLesson(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     lesson = models.ForeignKey(Lesson, on_delete=models.CASCADE)
@@ -52,6 +59,10 @@ class Quiz(TimeStampedModel):
         Classroom, on_delete=models.CASCADE, related_name='quiz')
     student = models.ManyToManyField(User, blank=True, through='UserQuiz')
     name = models.CharField(max_length=200)
+
+
+    def __str__(self):
+        return self.name
 
 class UserQuiz(TimeStampedModel):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -70,6 +81,8 @@ class Question(TimeStampedModel):
     user_answer = models.ManyToManyField(User, through='UserAnswer')
 
 
+    def __str__(self):
+        return self.question
 class UserAnswer(TimeStampedModel):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
