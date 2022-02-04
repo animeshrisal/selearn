@@ -43,9 +43,7 @@ class LessonSerializer(serializers.ModelSerializer):
     name = serializers.CharField()
     description = serializers.CharField()
     body = serializers.CharField()
-    order = serializers.IntegerField(read_only=True)
-    previous = serializers.PrimaryKeyRelatedField(read_only=True)
-    next = serializers.PrimaryKeyRelatedField(read_only=True)
+
 
     def create(self, validated_data):
         with transaction.atomic():
@@ -53,6 +51,8 @@ class LessonSerializer(serializers.ModelSerializer):
                 classroom_id=self.context['classroom_id'])
 
             total_lesson_count = classroom_lessons.count()
+
+            prev_lesson_id = None
 
             if total_lesson_count > 0:
                 prev_lesson = classroom_lessons.last()
@@ -85,6 +85,9 @@ class UserLessonSerializer(serializers.Serializer):
     order = serializers.IntegerField()
     completed = serializers.BooleanField()
     completed_at = serializers.DateField()
+    order = serializers.IntegerField(read_only=True)
+    previous = serializers.PrimaryKeyRelatedField(read_only=True)
+    next = serializers.PrimaryKeyRelatedField(read_only=True)
 
     class Meta:
         fields = '__all__'
