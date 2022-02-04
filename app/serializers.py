@@ -61,6 +61,7 @@ class LessonSerializer(serializers.ModelSerializer):
 
 
 class UserLessonSerializer(serializers.Serializer):
+    id = serializers.IntegerField()
     name = serializers.CharField()
     description = serializers.CharField()
     order = serializers.IntegerField()
