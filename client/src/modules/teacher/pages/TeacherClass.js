@@ -28,9 +28,6 @@ const TeacherClass = (props) => {
         return (
             <Container>
                 <Grid container spacing={2}>
-                    <Grid xs={4}>
-                        <Button onClick={() => goToAddLessonPage()}>Add new lesson</Button>
-                    </Grid>
                     <Grid item xs={12}>
                         <CardMedia
                             component="img"
@@ -46,6 +43,9 @@ const TeacherClass = (props) => {
                                 {data.description}
                             </Typography>
                         </CardContent>
+                    </Grid>
+                    <Grid xs={4}>
+                        <Button onClick={() => goToAddLessonPage()}>Add new lesson</Button>
                     </Grid>
                     <Grid item xs={12}>
                         {isSuccess ?
