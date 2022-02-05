@@ -44,7 +44,7 @@ const TeacherClass = (props) => {
                             </Typography>
                         </CardContent>
                     </Grid>
-                    <Grid xs={4}>
+                    <Grid item xs={4}>
                         <Button onClick={() => goToAddLessonPage()}>Add new lesson</Button>
                     </Grid>
                     <Grid item xs={12}>
@@ -60,7 +60,7 @@ const TeacherClass = (props) => {
                                     <TableBody>
                                         {dataLesson.results.map((row) => (
                                             <TableRow
-                                                key={row.name}
+                                                key={row.id}
                                                 sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                                             >
                                                 <TableCell component="th" scope="row">
