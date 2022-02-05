@@ -91,8 +91,8 @@ class UserLessonListAPI(generics.ListAPIView):
             return Response({"error": "Could not load your lessons"}, status=status.HTTP_400_BAD_REQUEST)
 
 
-class UserLessonRetrieveAPI(generics.RetrieveAPIView):
-    serializer_class = UserLessonDetailSerializer
+class UserLessonRetrieveUpdateDestroyAPI(generics.RetrieveUpdateDestroyAPIView):
+    serializer_class = LessonSerializer
 
     def retrieve(self, request, pk, lesson_pk):
         lesson = Lesson.objects.raw(user_lesson_query, params=[
@@ -100,6 +100,16 @@ class UserLessonRetrieveAPI(generics.RetrieveAPIView):
         serializer = UserLessonDetailSerializer(lesson)
 
         return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+    def update(self, request, pk, lesson_pk):
+        lesson = Lesson.objects.get(pk=lesson_pk)
+        serializer = LessonSerializer(lesson, data=request.data)
+
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class EnrollStudentAPI(generics.CreateAPIView,  generics.RetrieveAPIView):

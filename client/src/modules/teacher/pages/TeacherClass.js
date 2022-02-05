@@ -1,4 +1,4 @@
-import { CardContent,  CardMedia, CircularProgress, Container, Grid, IconButton, Paper, Skeleton, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material';
+import { Button, CardContent, CardMedia, CircularProgress, Container, Grid, IconButton, Paper, Skeleton, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material';
 import React from 'react';
 import { useQuery } from 'react-query';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -16,8 +16,8 @@ const TeacherClass = (props) => {
         teacherDashboardService.getLessons(classroomId)
     );
 
-    const goToEditLessonPage = (id) => {
-        navigate(`lesson/${id}`);
+    const goToAddLessonPage = (action = "post", id = 0) => {
+        navigate(`add_lesson/`, { state: { action, id } });
     };
 
     if (isLoading) {
@@ -28,6 +28,9 @@ const TeacherClass = (props) => {
         return (
             <Container>
                 <Grid container spacing={2}>
+                    <Grid xs={4}>
+                        <Button onClick={() => goToAddLessonPage()}>Add new lesson</Button>
+                    </Grid>
                     <Grid item xs={12}>
                         <CardMedia
                             component="img"
@@ -64,7 +67,7 @@ const TeacherClass = (props) => {
                                                     {row.name}
                                                 </TableCell>
                                                 <TableCell align="right">
-                                                    <IconButton onClick={() => goToEditLessonPage(row.id)} color="primary" component="span">
+                                                    <IconButton onClick={() => goToAddLessonPage("edit", row.id)} color="primary" component="span">
                                                         <EditIcon />
                                                     </IconButton>
                                                 </TableCell>

@@ -61,6 +61,17 @@ import {
         });
   }
   
+  const updateLesson = (classroomId, lessonId, lesson) => {
+    return fetch(
+        `${URL}/dashboard/classroom/${classroomId}/lesson/${lessonId}`,
+        authenticatedRequestGenerator(lesson, "PUT")
+      )
+        .then(handleResponse)
+        .then((lesson) => {
+          return lesson;
+        });
+  }
+  
 
   export const teacherDashboardService = {
     getClassrooms,
@@ -69,5 +80,6 @@ import {
     postLesson,
     getLessons,
     getLesson,
+    updateLesson
   };
   

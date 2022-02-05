@@ -67,7 +67,7 @@ function App() {
                     <TeacherClass />
                   </PrivateRoute>
                 } />
-                <Route path="classroom/:classroomId/lesson/:lessonId" element={
+                <Route path="classroom/:classroomId/add_lesson/" element={
                   <PrivateRoute>
                     <AddLessonPage />
                   </PrivateRoute>
