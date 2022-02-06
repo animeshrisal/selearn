@@ -9,10 +9,8 @@ user_lesson_list_query = '''select
 	user_id
 from
 	app_lesson
-full outer join app_userlesson on
+left outer join app_userlesson on
 	app_lesson.id = app_userlesson.lesson_id
-left outer join auth_user on
-	auth_user.id = app_userlesson.user_id
 where
 	app_lesson.classroom_id = %s order by app_lesson.order'''
 
@@ -28,9 +26,7 @@ user_lesson_query = '''select
 	user_id
 from
 	app_lesson
-full outer join app_userlesson on
+left outer join app_userlesson on
 	app_lesson.id = app_userlesson.lesson_id
-left outer join auth_user on
-	auth_user.id = app_userlesson.user_id
 where
 	app_lesson.id = %s'''
