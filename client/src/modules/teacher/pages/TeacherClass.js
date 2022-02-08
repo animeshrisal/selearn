@@ -1,4 +1,4 @@
-import { Button, CardContent, CardMedia, CircularProgress, Container, Grid, IconButton, Paper, Skeleton, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material';
+import { Button, CardContent, CardMedia, CircularProgress, Container, FormControlLabel, FormGroup, Grid, IconButton, Paper, Skeleton, Switch, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material';
 import React from 'react';
 import { useQuery } from 'react-query';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -28,6 +28,11 @@ const TeacherClass = (props) => {
         return (
             <Container>
                 <Grid container spacing={2}>
+                    <Grid item xs={12}>
+                        <FormGroup>
+                            <FormControlLabel control={<Switch defaultChecked />} label="Active" />
+                        </FormGroup>
+                    </Grid>
                     <Grid item xs={12}>
                         <CardMedia
                             component="img"

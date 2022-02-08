@@ -25,6 +25,7 @@ class ClassroomSerializer(serializers.ModelSerializer):
     description = serializers.CharField()
     banner = serializers.ImageField()
     teacher = UserSerializer(read_only=True)
+    is_active = serializers.BooleanField()
 
     def create(self, validated_data):
         classroom = Classroom.objects.create(
@@ -38,7 +39,7 @@ class ClassroomSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Classroom
-        fields = ('id', 'subject', 'description', 'banner', 'teacher')
+        fields = ('id', 'subject', 'description', 'banner', 'teacher', 'is_active')
 
 
 class LessonSerializer(serializers.ModelSerializer):

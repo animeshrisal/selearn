@@ -1,11 +1,11 @@
 from django.db import IntegrityError
 from django.shortcuts import render
 
-from rest_framework import viewsets, generics, filters, status, mixins
+from rest_framework import viewsets, generics,  status
 from app import serializers
 
 from app.models import Classroom, Enrollment, Lesson, UserLesson
-from app.serializers import ClassroomSerializer, EnrollmentSerializer, LessonSerializer, UserCompletionSerializer, UserLessonDetailSerializer, UserLessonSerializer
+from app.serializers import ClassroomSerializer, EnrollmentSerializer, LessonSerializer, UserLessonDetailSerializer, UserLessonSerializer
 from rest_framework.response import Response
 
 from .shared.helpers import StandardResultsSetPagination
@@ -17,9 +17,6 @@ import sys
 
 from django.forms.models import model_to_dict
 from datetime import date
-
-
-
 
 from .queries import user_lesson_query, user_lesson_list_query
 
@@ -143,7 +140,7 @@ class EnrollStudentAPI(generics.CreateAPIView,  generics.RetrieveAPIView):
 class CompleteLessonAPI(generics.CreateAPIView):
     def post(self, request, pk, lesson_pk):
         try:
-            user_lesson = UserLesson.objects.create(
+            UserLesson.objects.create(
                 user_id=request.user.id, 
                 lesson_id=lesson_pk, 
                 completed=True
