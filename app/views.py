@@ -2,7 +2,6 @@ from django.db import IntegrityError
 from django.shortcuts import render
 
 from rest_framework import viewsets, generics,  status
-from app import serializers
 
 from app.models import Classroom, Enrollment, Lesson, UserLesson
 from app.serializers import ClassroomSerializer, EnrollmentSerializer, LessonSerializer, UserLessonDetailSerializer, UserLessonSerializer
@@ -150,3 +149,15 @@ class CompleteLessonAPI(generics.CreateAPIView):
             return Response({"error": "You have already completed this lesson"}, status=status.HTTP_400_BAD_REQUEST)
         except Exception as e:
             return Response({"error": "Could not complete lesson"}, status=status.HTTP_400_BAD_REQUEST)
+
+class SetClassroomActiveStatus(generics.UpdateAPIView):
+    def put(self, request, pk):
+        try:
+            classroom = Classroom.objects.get(pk=pk)
+            serializer = ClassroomSerializer(classroom, data=request.data, partial=True)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(status=status.HTTP_204_NO_CONTENT)
+                
+        except Exception as e:
+            return Response({"error": "Could not update classroom"}, status=status.HTTP_400_BAD_REQUEST)

@@ -26,7 +26,8 @@ urlpatterns = [
     path('classroom/<int:pk>/lesson/<int:lesson_pk>', views.UserLessonRetrieveUpdateDestroyAPI.as_view(), name="lesson-detail"),
     
     path('classroom/<int:pk>/enroll', views.EnrollStudentAPI.as_view(), name="enroll"),
-    path('classroom/<int:pk>/lesson/<int:lesson_pk>/complete', views.CompleteLessonAPI.as_view(), name="complete_lesson")
+    path('classroom/<int:pk>/lesson/<int:lesson_pk>/complete', views.CompleteLessonAPI.as_view(), name="complete_lesson"),
+    path('classroom/<int:pk>/chnage_active_status', views.SetClassroomActiveStatus.as_view(), name="complete_lesson")
 ]
 
 
