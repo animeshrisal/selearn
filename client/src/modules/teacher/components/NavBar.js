@@ -39,7 +39,7 @@ const NavBar = () => {
         <AppBar position="fixed">
             <Toolbar>
                 <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-                    Dashboard
+                    Dashboardasdasdasd
                 </Typography>
                 <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">
