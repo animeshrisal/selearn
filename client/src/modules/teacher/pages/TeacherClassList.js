@@ -3,19 +3,21 @@ import React, { useState } from 'react';
 import ClassroomCard from '../../shared/components/ClassroomCard';
 import AddIcon from '@mui/icons-material/Add';
 import { useNavigate } from 'react-router-dom';
-import { useMutation, useQuery } from 'react-query';
+import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { teacherDashboardService } from '../TeacherDashboardService';
 import AddClassroomDialogue from '../components/AddClassroomDialogue';
 
 const TeacherClassList = (props) => {
     const navigate = useNavigate();
+    const queryClient = useQueryClient()
+
     const { isLoading, data } = useQuery("getFeed", teacherDashboardService.getClassrooms);
 
     const mutation = useMutation(
         (classroom) => teacherDashboardService.postClassroom(classroom),
         {
             onSuccess: (mutation) => {
-                console.log("AA")
+                queryClient.invalidateQueries(['getFeed'])
             },
         }
     );
@@ -60,7 +62,7 @@ const TeacherClassList = (props) => {
                         handleClose={handleClose}
                     />
                 </Grid>
-                <Fab onClick={handleClickOpen} color="secondary" aria-label="add">
+                <Fab onClick={handleClickOpen} onClose={handleClose} color="secondary" aria-label="add">
                     <AddIcon />
                 </Fab>
             </React.Fragment>

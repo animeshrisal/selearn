@@ -18,7 +18,7 @@ const AddClassroomDialogue = (props) => {
         props.addClassroom({subject, description, banner})
         setSubject('')
         setDescription('')
-        
+        handleClose()
     }
 
 
