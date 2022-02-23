@@ -23,6 +23,12 @@ class Classroom(TimeStampedModel):
     def __str__(self):
         return self.subject
 
+class Annoucement(TimeStampedModel):
+    title = models.CharField(max_length=200)
+    description = models.TextField()
+    teacher = models.ForeignKey(User, on_delete=models.CASCADE, related_name='teacher_annoucement')
+    classroom = models.ForeignKey(Classroom, on_delete=models.CASCADE, related_name='classroom_annoucement')
+
 class Enrollment(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     classroom = models.ForeignKey(Classroom, on_delete=models.CASCADE)
