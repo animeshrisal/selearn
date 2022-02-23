@@ -1,6 +1,7 @@
 export function handleResponse(response) {
     return response.text().then(text => {
         const data = keysToCamel(text && JSON.parse(text));
+
         if (!response.ok) {
             const errors = data;
             return Promise.reject(errors);

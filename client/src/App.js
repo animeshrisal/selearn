@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter, BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { BrowserRouter, BrowserRouter as Router, Navigate, Route, Routes } from "react-router-dom";
 import PrivateRoute from "./modules/shared/components/PrivateRoute";
 import Login from "./modules/auth/pages/Login";
 import './App.scss'
@@ -26,6 +26,8 @@ function App() {
         <QueryClientProvider client={queryClient}>
           <BrowserRouter>
             <Routes>
+              <Route exact path="/" element={<Navigate to ="/dashboard/" /> } />
+                
               <Route exact path="/login/" element={<Login />} />
               <Route exact path="/register" element={<Register />} />
               <Route path="/auth/:uid/:token" element={<ConfirmUser />} />
