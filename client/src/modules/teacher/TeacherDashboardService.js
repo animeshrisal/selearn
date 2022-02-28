@@ -71,6 +71,14 @@ import {
           return lesson;
         });
   }
+
+  const toggleActiveStatus = (classroomId) => {
+    return fetch(`${URL}/dashboard/classroom/${classroomId}`, authenticatedGetRequestOption())
+      .then(handleResponse)
+      .then((classroom) => {
+        return classroom;
+      });
+  }
   
 
   export const teacherDashboardService = {
@@ -80,6 +88,7 @@ import {
     postLesson,
     getLessons,
     getLesson,
-    updateLesson
+    updateLesson,
+    toggleActiveStatus
   };
   

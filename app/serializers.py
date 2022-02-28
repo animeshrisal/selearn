@@ -32,7 +32,8 @@ class ClassroomSerializer(serializers.ModelSerializer):
             subject=validated_data['subject'],
             description=validated_data['description'],
             banner=validated_data['banner'],
-            teacher=self.context['teacher']
+            teacher=self.context['teacher'],
+            is_active = False
         )
 
         return classroom

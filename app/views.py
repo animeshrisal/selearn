@@ -76,7 +76,7 @@ class UserLessonListAPI(generics.ListAPIView):
         try:
             lesson_list = Lesson.objects.raw(user_lesson_list_query, params=[
                 pk])
- 
+
             page = self.paginate_queryset(lesson_list)
             serializer = UserLessonSerializer(page, many=True)
             result = self.get_paginated_response(serializer.data)
@@ -140,8 +140,8 @@ class CompleteLessonAPI(generics.CreateAPIView):
     def post(self, request, pk, lesson_pk):
         try:
             UserLesson.objects.create(
-                user_id=request.user.id, 
-                lesson_id=lesson_pk, 
+                user_id=request.user.id,
+                lesson_id=lesson_pk,
                 completed=True
             )
             return Response(status=status.HTTP_204_NO_CONTENT)
@@ -150,14 +150,14 @@ class CompleteLessonAPI(generics.CreateAPIView):
         except Exception as e:
             return Response({"error": "Could not complete lesson"}, status=status.HTTP_400_BAD_REQUEST)
 
-class SetClassroomActiveStatus(generics.UpdateAPIView):
-    def put(self, request, pk):
+
+class SetClassroomActiveStatus(generics.RetrieveAPIView):
+    def get(self, request, pk):
         try:
             classroom = Classroom.objects.get(pk=pk)
-            serializer = ClassroomSerializer(classroom, data=request.data, partial=True)
-            if serializer.is_valid():
-                serializer.save()
-                return Response(status=status.HTTP_204_NO_CONTENT)
-                
+            classroom.is_active = not classroom.is_active
+            classroom.save()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+
         except Exception as e:
             return Response({"error": "Could not update classroom"}, status=status.HTTP_400_BAD_REQUEST)
