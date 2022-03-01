@@ -19,7 +19,6 @@ const AddLessonPage = () => {
     const handleName = (e) => setName(e.target.value)
     const handleDescription = (e) => setDescription(e.target.value)
 
-
     useQuery(["lesson", state.id], () =>
         teacherDashboardService.getLesson(classroomId, state.id), {
         enabled: state.action === "post" ? false : true,

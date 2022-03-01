@@ -1,11 +1,14 @@
-import { Button, CardContent, CardMedia, CircularProgress, Container, FormControlLabel, FormGroup, Grid, IconButton, Paper, Skeleton, Switch, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material';
-import React from 'react';
-import { useQuery } from 'react-query';
+import { Button, CardContent, CardMedia, CircularProgress, Container, Fab, Grid, IconButton, Paper, Skeleton, Switch, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material';
+import React, { useState } from 'react';
+import { useQuery, useMutation, useQueryClient } from 'react-query';
 import { useNavigate, useParams } from 'react-router-dom';
 import { teacherDashboardService } from '../TeacherDashboardService';
 import EditIcon from '@mui/icons-material/Edit';
+import AddClassroomDialogue from '../components/AddClassroomDialogue';
+
 
 const TeacherClass = (props) => {
+    const queryClient = useQueryClient()
     const { classroomId } = useParams();
     const navigate = useNavigate();
     const { isLoading, data } = useQuery(["classroom", classroomId], () =>
@@ -20,6 +23,32 @@ const TeacherClass = (props) => {
         navigate(`add_lesson/`, { state: { action, id } });
     };
 
+    const mutation = useMutation(
+        ({classroom, state}) => {
+            if(state === 'Add') return teacherDashboardService.postClassroom(classroom)
+            else if (state === 'Edit') return teacherDashboardService.updateClassroom(classroom, classroomId)
+        },         {
+            onSuccess: (mutation) => {
+                queryClient.invalidateQueries(['classroom', classroomId])
+            },
+        }
+    );
+
+    const [openModal, setOpenModal] = useState(false)
+
+    const handleClickOpen = () => {
+        setOpenModal(true);
+    };
+
+    const handleClose = () => {
+        setOpenModal(false);
+    };
+
+    const addClassroom = (classroom, state) => {
+        console.log(state)
+        mutation.mutate({classroom, state})
+    }
+
     if (isLoading) {
         return <CircularProgress />;
     }
@@ -28,11 +57,6 @@ const TeacherClass = (props) => {
         return (
             <Container>
                 <Grid container spacing={2}>
-                    <Grid item xs={12}>
-                        <FormGroup>
-                            <FormControlLabel control={<Switch defaultChecked />} label="Active" />
-                        </FormGroup>
-                    </Grid>
                     <Grid item xs={12}>
                         <CardMedia
                             component="img"
@@ -85,6 +109,16 @@ const TeacherClass = (props) => {
                         }
                     </Grid>
                 </Grid>
+                <AddClassroomDialogue
+                    state = 'Edit'
+                    classroomId={data.id}
+                    openModal={openModal}
+                    addClassroom={addClassroom}
+                    handleClose={handleClose}
+                />
+                <Fab onClick={handleClickOpen} onClose={handleClose} color="secondary" aria-label="edit">
+                    <EditIcon />
+                </Fab>
             </Container>
         )
     }

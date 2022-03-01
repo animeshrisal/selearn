@@ -1,12 +1,15 @@
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField } from '@mui/material';
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Switch, TextField } from '@mui/material';
 import { Box } from '@mui/system';
 import React, { useEffect, useState } from 'react';
+import { useQuery } from 'react-query';
+import { teacherDashboardService } from '../TeacherDashboardService';
 
 const AddClassroomDialogue = (props) => {
 
     const [subject, setSubject] = useState('')
     const [description, setDescription] = useState('')
     const [banner, setBanner] = useState(null);
+    const [activeStatus, setActiveStatus] = useState(true)
     const [imageUrl, setImageUrl] = useState(null);
 
 
@@ -15,11 +18,23 @@ const AddClassroomDialogue = (props) => {
     };
 
     const addClassroom = () => {
-        props.addClassroom({subject, description, banner})
+        props.addClassroom({ subject, description, banner, activeStatus }, props.state)
         setSubject('')
         setDescription('')
         handleClose()
     }
+
+    useQuery(["classroom", props.id], () =>
+        teacherDashboardService.getClassroom(props.classroomId), {
+        refetchOnWindowFocus: false,
+        enabled: props.state === "Add" ? false : true,
+        onSuccess: (classroom) => {
+            setSubject(classroom.subject)
+            setDescription(classroom.description)
+            setActiveStatus(classroom.activeStatus)
+            }
+        }
+    );
 
 
     useEffect(() => {
@@ -30,11 +45,17 @@ const AddClassroomDialogue = (props) => {
 
     const handleSubject = e => setSubject(e.target.value);
     const handleDescription = e => setDescription(e.target.value);
+    const handleActiveStatus = e => setActiveStatus(e.target.checked)
 
     return (
         <Dialog open={props.openModal} onClose={handleClose}>
-            <DialogTitle>Add Classroom</DialogTitle>
+            <DialogTitle>{props.state} Classroom</DialogTitle>
             <DialogContent>
+                <Switch
+                    checked={activeStatus}
+                    onChange={handleActiveStatus}
+                    inputProps={{ 'aria-label': 'controlled' }}
+                />
                 <TextField
                     margin="normal"
                     value={subject}

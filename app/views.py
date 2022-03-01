@@ -28,7 +28,7 @@ class ClassroomViewSet(viewsets.ModelViewSet):
     pagination_class = StandardResultsSetPagination
 
     def list(self, request):
-        queryset = self.queryset.filter(is_active=True).order_by('-created_at')
+        queryset = self.queryset.filter(active_status=True).order_by('-created_at')
         page = self.paginate_queryset(queryset)
         serializer = ClassroomSerializer(page, many=True)
         result = self.get_paginated_response(serializer.data)
@@ -151,11 +151,14 @@ class CompleteLessonAPI(generics.CreateAPIView):
             return Response({"error": "Could not complete lesson"}, status=status.HTTP_400_BAD_REQUEST)
 
 
-class SetClassroomActiveStatus(generics.RetrieveAPIView):
-    def get(self, request, pk):
+class SetClassroomActiveStatus(generics.UpdateAPIView):
+    queryset = Classroom.objects.all()
+    serializer_class = ClassroomSerializer
+
+    def patch(self, request, pk):
         try:
             classroom = Classroom.objects.get(pk=pk)
-            classroom.is_active = not classroom.is_active
+            classroom.active_status = not classroom.active_status
             classroom.save()
             return Response(status=status.HTTP_204_NO_CONTENT)
 

@@ -18,7 +18,7 @@ class Classroom(TimeStampedModel):
     description = models.TextField()
     banner = models.ImageField(
         upload_to="banners", default="banners/default.png")
-    is_active = models.BooleanField(default=True)
+    active_status = models.BooleanField(default=True)
 
     def __str__(self):
         return self.subject
