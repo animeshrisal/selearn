@@ -60,7 +60,7 @@ const TeacherClassList = (props) => {
                         openModal={openModal}
                         addClassroom={addClassroom}
                         handleClose={handleClose}
-                        state = 'Add'
+                        state='Add'
                     />
                 </Grid>
                 <Fab onClick={handleClickOpen} onClose={handleClose} color="secondary" aria-label="add">
