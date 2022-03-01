@@ -9,4 +9,3 @@ admin.site.register(Quiz)
 admin.site.register(Question)
 admin.site.register(UserAnswer)
 admin.site.register(Comment)
-
