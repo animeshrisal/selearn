@@ -1,14 +1,11 @@
 import { Avatar, Fab, Grid, List, ListItem, ListItemAvatar, ListItemText } from '@mui/material';
 import React, { useState } from 'react';
-import ClassroomCard from '../../shared/components/ClassroomCard';
 import AddIcon from '@mui/icons-material/Add';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { teacherDashboardService } from '../TeacherDashboardService';
 import AddQuizDialogue from '../components/AddQuizDialgoue';
-import Typography from '@mui/material/Typography';
 import FolderIcon from '@mui/icons-material/Folder';
-import DeleteIcon from '@mui/icons-material/Delete';
 
 const QuizList = (props) => {
     const navigate = useNavigate();
