@@ -26,8 +26,8 @@ function App() {
         <QueryClientProvider client={queryClient}>
           <BrowserRouter>
             <Routes>
-              <Route exact path="/" element={<Navigate to ="/dashboard/" /> } />
-                
+              <Route exact path="/" element={<Navigate to="/dashboard/" />} />
+
               <Route exact path="/login/" element={<Login />} />
               <Route exact path="/register" element={<Register />} />
               <Route path="/auth/:uid/:token" element={<ConfirmUser />} />
