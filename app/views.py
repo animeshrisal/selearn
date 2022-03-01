@@ -1,5 +1,4 @@
 from django.db import IntegrityError
-from django.shortcuts import render
 
 from rest_framework import viewsets, generics,  status
 
@@ -12,10 +11,6 @@ from .shared.helpers import StandardResultsSetPagination
 from django.db import transaction
 
 import traceback
-import sys
-
-from django.forms.models import model_to_dict
-from datetime import date
 
 from .queries import user_lesson_query, user_lesson_list_query
 
@@ -28,7 +23,8 @@ class ClassroomViewSet(viewsets.ModelViewSet):
     pagination_class = StandardResultsSetPagination
 
     def list(self, request):
-        queryset = self.queryset.filter(active_status=True).order_by('-created_at')
+        queryset = self.queryset.filter(
+            active_status=True).order_by('-created_at')
         page = self.paginate_queryset(queryset)
         serializer = ClassroomSerializer(page, many=True)
         result = self.get_paginated_response(serializer.data)
