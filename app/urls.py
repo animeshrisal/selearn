@@ -27,6 +27,10 @@ urlpatterns = [
     
     path('classroom/<int:pk>/enroll', views.EnrollStudentAPI.as_view(), name="enroll"),
     path('classroom/<int:pk>/lesson/<int:lesson_pk>/complete', views.CompleteLessonAPI.as_view(), name="complete_lesson"),
+    path('classroom/<int:pk>/quiz/', views.ClassroomQuizAPI.as_view({'get': 'list', 'post': 'create'}), name="quiz"),
+    path('classroom/<int:pk>/quiz/<int:quiz_pk>',
+         views.ClassroomQuizAPI.as_view({'get': 'retrieve', 'put': 'update', 'delete': 'destroy'}), name="quiz"),
+   
 ]
 
 

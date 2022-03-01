@@ -38,6 +38,30 @@ const getLesson = (classroomId, lessonId) => {
     });
 }
 
+const getQuizzes = (classroomId) => {
+  return fetch(`${URL}/dashboard/classroom/${classroomId}/quiz/`, authenticatedGetRequestOption())
+    .then(handleResponse)
+    .then((quizzes) => {
+      return quizzes;
+    });
+}
+
+const getQuiz = (classroomId, quizId) => {
+  return fetch(`${URL}/dashboard/classroom/${classroomId}/quiz/${quizId}`, authenticatedGetRequestOption())
+    .then(handleResponse)
+    .then((quiz) => {
+      return quiz;
+    });
+}
+
+const postQuiz = (classroomId, quiz) => {
+  return fetch(`${URL}/dashboard/classroom/${classroomId}/quiz/`, authenticatedRequestGenerator(quiz, "POST"))
+    .then(handleResponse)
+    .then((quiz) => {
+      return quiz;
+    });
+}
+
 
 const postClassroom = (classroom) => {
   return fetch(
@@ -83,16 +107,16 @@ const updateClassroom = (classroom, classroomId) => {
     });
 }
 
-
-
-
 export const teacherDashboardService = {
-  getClassrooms,
   getClassroom,
+  getClassrooms,
+  getLesson,
+  getLessons,
+  getQuiz,
+  getQuizzes,
   postClassroom,
   postLesson,
-  getLessons,
-  getLesson,
+  postQuiz,
+  updateClassroom,
   updateLesson,
-  updateClassroom
 };

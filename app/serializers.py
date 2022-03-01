@@ -125,8 +125,16 @@ class EnrollmentSerializer(serializers.Serializer):
 
 
 class QuizSerializer(serializers.ModelSerializer):
-    created_at = serializers.DateTimeField()
+    created_at = serializers.DateTimeField(read_only=True)
     name = serializers.CharField()
+
+    def create(self, validated_data):
+        quiz = Quiz.objects.create(
+            name=validated_data['name'],
+            classroom_id=self.context['classroom'],
+        )
+
+        return quiz
 
     class Meta:
         model = Quiz

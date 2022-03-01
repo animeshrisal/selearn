@@ -2,8 +2,8 @@ from django.db import IntegrityError
 
 from rest_framework import viewsets, generics,  status
 
-from app.models import Classroom, Enrollment, Lesson, UserLesson
-from app.serializers import ClassroomSerializer, EnrollmentSerializer, LessonSerializer, UserLessonDetailSerializer, UserLessonSerializer
+from app.models import Classroom, Enrollment, Lesson, Quiz, UserLesson
+from app.serializers import ClassroomSerializer, EnrollmentSerializer, LessonSerializer, QuizSerializer, UserLessonDetailSerializer, UserLessonSerializer
 from rest_framework.response import Response
 
 from .shared.helpers import StandardResultsSetPagination
@@ -145,3 +145,26 @@ class CompleteLessonAPI(generics.CreateAPIView):
             return Response({"error": "You have already completed this lesson"}, status=status.HTTP_400_BAD_REQUEST)
         except Exception as e:
             return Response({"error": "Could not complete lesson"}, status=status.HTTP_400_BAD_REQUEST)
+
+class ClassroomQuizAPI(viewsets.ModelViewSet):
+    queryset = Quiz.objects.all()
+    serializer_class = QuizSerializer
+    pagination_class = StandardResultsSetPagination
+
+    def list(self, request, pk):
+        queryset = self.queryset.filter(
+            classroom_id=pk).order_by('-created_at')
+        page = self.paginate_queryset(queryset)
+        serializer = QuizSerializer(page, many=True)
+        result = self.get_paginated_response(serializer.data)
+        return result
+
+    def create(self, request, pk):
+        context = {'classroom': pk}
+        serializer = QuizSerializer(data=request.data, context=context)
+
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

@@ -23,6 +23,10 @@ const TeacherClass = (props) => {
         navigate(`add_lesson/`, { state: { action, id } });
     };
 
+    const goToQuizList = () => {
+        navigate(`quiz_list/`)
+    }
+
     const mutation = useMutation(
         ({classroom, state}) => {
             if(state === 'Add') return teacherDashboardService.postClassroom(classroom)
@@ -45,7 +49,6 @@ const TeacherClass = (props) => {
     };
 
     const addClassroom = (classroom, state) => {
-        console.log(state)
         mutation.mutate({classroom, state})
     }
 
@@ -73,8 +76,11 @@ const TeacherClass = (props) => {
                             </Typography>
                         </CardContent>
                     </Grid>
-                    <Grid item xs={4}>
+                    <Grid item xs={2}>
                         <Button onClick={() => goToAddLessonPage()}>Add new lesson</Button>
+                    </Grid>
+                    <Grid item xs={4}>
+                        <Button onClick={() => goToQuizList()}>Go to quiz</Button>
                     </Grid>
                     <Grid item xs={12}>
                         {isSuccess ?
