@@ -41,7 +41,6 @@ const SocketProvider = ({ children }) => {
 
   const disconnect = () => {
     socket.close();
-    console.log('Disconnected!')
   }
 
   const connect = (token) => {
