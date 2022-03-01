@@ -66,7 +66,7 @@ const postClassroom = (classroom) => {
     });
 }
 
-const createEnrollment = (classroomId)  => {
+const createEnrollment = (classroomId) => {
   return fetch(
     `${URL}/dashboard/classroom/${classroomId}/enroll`,
     authenticatedRequestGenerator({}, "POST")
