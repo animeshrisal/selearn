@@ -1,14 +1,12 @@
-import React, { useState } from 'react';
+import React from 'react';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
-import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
-import MenuIcon from '@mui/icons-material/Menu';
 import { Avatar, Menu, MenuItem, Tooltip } from '@mui/material';
 import { useAuthentication, useSocket } from '../../shared/context';
-import { Navigate, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 
 
@@ -20,9 +18,9 @@ const NavBar = (props) => {
 
   const settings = [
     {
-      title: 'Classes', method: () => 
+      title: 'Classes', method: () =>
         goToClassroom()
-      
+
     },
     {
       title: 'Logout', method: () => {
