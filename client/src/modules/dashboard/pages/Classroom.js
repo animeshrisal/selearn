@@ -91,7 +91,7 @@ const Classroom = (props) => {
                                                 <Typography>{lesson.name}</Typography>
                                             </Grid>
                                             <Grid item>
-                                                { lesson.completed ? <CheckCircleIcon /> : <RadioButtonUncheckedIcon /> }
+                                                {lesson.completed ? <CheckCircleIcon /> : <RadioButtonUncheckedIcon />}
                                             </Grid>
 
                                         </Grid>
