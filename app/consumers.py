@@ -1,6 +1,7 @@
 from channels.generic.websocket import AsyncJsonWebsocketConsumer
 import json
 
+
 class NotificationConsumer(AsyncJsonWebsocketConsumer):
     async def connect(self):
         self.user = self.scope['user'].username
@@ -15,6 +16,6 @@ class NotificationConsumer(AsyncJsonWebsocketConsumer):
     # Receive message from room group
     async def notification_message(self, event):
         message = event["message"]
-        
+
         # Send message to WebSocket
         await self.send(text_data=json.dumps({"message": message}))
