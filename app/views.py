@@ -146,6 +146,7 @@ class CompleteLessonAPI(generics.CreateAPIView):
         except Exception as e:
             return Response({"error": "Could not complete lesson"}, status=status.HTTP_400_BAD_REQUEST)
 
+
 class ClassroomQuizAPI(viewsets.ModelViewSet):
     queryset = Quiz.objects.all()
     serializer_class = QuizSerializer
