@@ -28,14 +28,14 @@ const TeacherClass = (props) => {
     }
 
     const mutation = useMutation(
-        ({classroom, state}) => {
-            if(state === 'Add') return teacherDashboardService.postClassroom(classroom)
+        ({ classroom, state }) => {
+            if (state === 'Add') return teacherDashboardService.postClassroom(classroom)
             else if (state === 'Edit') return teacherDashboardService.updateClassroom(classroom, classroomId)
-        },         {
-            onSuccess: (mutation) => {
-                queryClient.invalidateQueries(['classroom', classroomId])
-            },
-        }
+        }, {
+        onSuccess: (mutation) => {
+            queryClient.invalidateQueries(['classroom', classroomId])
+        },
+    }
     );
 
     const [openModal, setOpenModal] = useState(false)
@@ -49,7 +49,7 @@ const TeacherClass = (props) => {
     };
 
     const addClassroom = (classroom, state) => {
-        mutation.mutate({classroom, state})
+        mutation.mutate({ classroom, state })
     }
 
     if (isLoading) {
@@ -116,7 +116,7 @@ const TeacherClass = (props) => {
                     </Grid>
                 </Grid>
                 <AddClassroomDialogue
-                    state = 'Edit'
+                    state='Edit'
                     classroomId={data.id}
                     openModal={openModal}
                     addClassroom={addClassroom}
