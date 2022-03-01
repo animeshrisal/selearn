@@ -1,8 +1,4 @@
-from asyncore import read
-from urllib import request
-from django.shortcuts import render
 from rest_framework import serializers
-from rest_framework.validators import UniqueValidator
 from .models import Classroom, Comment, Lesson, Question, Quiz, User, UserLesson
 from django.db import transaction
 from drf_spectacular.types import OpenApiTypes
