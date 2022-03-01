@@ -12,7 +12,7 @@ const AddQuestionDialogue = (props) => {
     const [fourthChoice, setFourthChoice] = useState('')
     const [correctChoice, setCorrectChoice] = useState('')
 
-    
+
     const handleClose = () => {
         props.handleClose()
     };
@@ -39,8 +39,8 @@ const AddQuestionDialogue = (props) => {
             setThirdChoice(question.thirdChoice)
             setFourthChoice(question.fourthChoice)
             setCorrectChoice(question.correctChoice)
-            }
         }
+    }
     );
 
     const handleQuestion = e => setQuestion(e.target.value);

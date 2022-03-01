@@ -32,8 +32,8 @@ const AddClassroomDialogue = (props) => {
             setSubject(classroom.subject)
             setDescription(classroom.description)
             setActiveStatus(classroom.activeStatus)
-            }
         }
+    }
     );
 
 
