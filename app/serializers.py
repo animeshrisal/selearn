@@ -29,14 +29,15 @@ class ClassroomSerializer(serializers.ModelSerializer):
             description=validated_data['description'],
             banner=validated_data['banner'],
             teacher=self.context['teacher'],
-            active_status = False
+            active_status=False
         )
 
         return classroom
 
     class Meta:
         model = Classroom
-        fields = ('id', 'subject', 'description', 'banner', 'teacher', 'active_status')
+        fields = ('id', 'subject', 'description',
+                  'banner', 'teacher', 'active_status')
 
 
 class LessonSerializer(serializers.ModelSerializer):
@@ -44,8 +45,10 @@ class LessonSerializer(serializers.ModelSerializer):
     description = serializers.CharField()
     body = serializers.CharField()
     order = serializers.IntegerField(read_only=True)
-    previous = extend_schema_field(OpenApiTypes.INT)(serializers.PrimaryKeyRelatedField)(read_only=True)
-    next =extend_schema_field(OpenApiTypes.INT)(serializers.PrimaryKeyRelatedField)(read_only=True)
+    previous = extend_schema_field(OpenApiTypes.INT)(
+        serializers.PrimaryKeyRelatedField)(read_only=True)
+    next = extend_schema_field(OpenApiTypes.INT)(
+        serializers.PrimaryKeyRelatedField)(read_only=True)
 
     def create(self, validated_data):
         with transaction.atomic():
@@ -66,9 +69,9 @@ class LessonSerializer(serializers.ModelSerializer):
                 body=validated_data['body'],
                 classroom_id=self.context['classroom_id'],
                 order=(total_lesson_count+1),
-                previous_id = prev_lesson_id
+                previous_id=prev_lesson_id
             )
-            
+
             if total_lesson_count > 0:
                 prev_lesson.next_id = lesson.id
                 prev_lesson.save()
@@ -77,7 +80,8 @@ class LessonSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Lesson
-        fields = ('id', 'name', 'description', 'body', 'order', 'next', 'previous')
+        fields = ('id', 'name', 'description',
+                  'body', 'order', 'next', 'previous')
 
 
 class UserLessonSerializer(serializers.Serializer):
@@ -92,7 +96,8 @@ class UserLessonSerializer(serializers.Serializer):
     next = serializers.PrimaryKeyRelatedField(read_only=True)
 
     class Meta:
-        fields = ('id', 'name', 'description', 'body', 'order', 'next', 'previous')
+        fields = ('id', 'name', 'description',
+                  'body', 'order', 'next', 'previous')
 
 
 class UserLessonDetailSerializer(serializers.Serializer):
@@ -104,9 +109,10 @@ class UserLessonDetailSerializer(serializers.Serializer):
     completed = serializers.BooleanField()
     completed_at = serializers.DateField()
     order = serializers.IntegerField(read_only=True)
-    previous = extend_schema_field(OpenApiTypes.INT)(serializers.PrimaryKeyRelatedField)(read_only=True)
-    next =extend_schema_field(OpenApiTypes.INT)(serializers.PrimaryKeyRelatedField)(read_only=True)
-
+    previous = extend_schema_field(OpenApiTypes.INT)(
+        serializers.PrimaryKeyRelatedField)(read_only=True)
+    next = extend_schema_field(OpenApiTypes.INT)(
+        serializers.PrimaryKeyRelatedField)(read_only=True)
 
     class Meta:
         fields = ('__all__')
@@ -161,6 +167,7 @@ class CommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Comment
         fields = ('id', 'comment', 'created_at')
+
 
 class UserCompletionSerializer(serializers.Serializer):
     user = serializers.PrimaryKeyRelatedField(read_only=True)
