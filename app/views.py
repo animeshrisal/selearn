@@ -149,18 +149,3 @@ class CompleteLessonAPI(generics.CreateAPIView):
             return Response({"error": "You have already completed this lesson"}, status=status.HTTP_400_BAD_REQUEST)
         except Exception as e:
             return Response({"error": "Could not complete lesson"}, status=status.HTTP_400_BAD_REQUEST)
-
-
-class SetClassroomActiveStatus(generics.UpdateAPIView):
-    queryset = Classroom.objects.all()
-    serializer_class = ClassroomSerializer
-
-    def patch(self, request, pk):
-        try:
-            classroom = Classroom.objects.get(pk=pk)
-            classroom.active_status = not classroom.active_status
-            classroom.save()
-            return Response(status=status.HTTP_204_NO_CONTENT)
-
-        except Exception as e:
-            return Response({"error": "Could not update classroom"}, status=status.HTTP_400_BAD_REQUEST)
