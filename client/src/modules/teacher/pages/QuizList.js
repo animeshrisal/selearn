@@ -1,4 +1,4 @@
-import { Avatar, Fab, Grid, List, ListItem, ListItemAvatar, ListItemText } from '@mui/material';
+import { Avatar, Button, Fab, Grid, IconButton, List, ListItem, ListItemAvatar, ListItemText, Paper } from '@mui/material';
 import React, { useState } from 'react';
 import AddIcon from '@mui/icons-material/Add';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -6,6 +6,13 @@ import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { teacherDashboardService } from '../TeacherDashboardService';
 import AddQuizDialogue from '../components/AddQuizDialgoue';
 import FolderIcon from '@mui/icons-material/Folder';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 
 const QuizList = (props) => {
     const navigate = useNavigate();
@@ -52,20 +59,32 @@ const QuizList = (props) => {
         return (
             <React.Fragment>
                 <Grid container spacing={2}>
-                    <List>
-                        {data.results.map((quiz) => (
-                            <ListItem>
-                                <ListItemAvatar>
-                                    <Avatar>
-                                        <FolderIcon />
-                                    </Avatar>
-                                </ListItemAvatar>
-                                <ListItemText
-                                    primary={quiz.name}
-                                />
-                            </ListItem>
-                        ))}
-                    </List>
+                    <TableContainer component={Paper}>
+                        <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                            <TableHead>
+                                <TableRow>
+                                    <TableCell>Quiz</TableCell>
+                                    <TableCell align="right">View</TableCell>
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>
+                                {data.results.map((row) => (
+                                    <TableRow
+                                        key={row.id}
+                                        sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                                    >
+                                        <TableCell component="th" scope="row">
+                                            {row.name}
+                                        </TableCell>
+                                        <TableCell align="right">
+                                            <IconButton onClick={() => goToQuizPage(row.id)} sx={{ p: 0 }}>
+                                                <ArrowForwardIcon />
+                                            </IconButton></TableCell>
+                                    </TableRow>
+                                ))}
+                            </TableBody>
+                        </Table>
+                    </TableContainer>
                     <AddQuizDialogue
                         openModal={openModal}
                         addClassroom={addQuiz}
