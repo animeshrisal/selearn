@@ -1,11 +1,10 @@
-import { Avatar, Button, Fab, Grid, IconButton, List, ListItem, ListItemAvatar, ListItemText, Paper } from '@mui/material';
+import { Fab, Grid, IconButton, Paper } from '@mui/material';
 import React, { useState } from 'react';
 import AddIcon from '@mui/icons-material/Add';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { teacherDashboardService } from '../TeacherDashboardService';
 import AddQuizDialogue from '../components/AddQuizDialgoue';
-import FolderIcon from '@mui/icons-material/Folder';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
