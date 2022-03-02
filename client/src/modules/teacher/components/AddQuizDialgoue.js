@@ -1,20 +1,18 @@
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField } from '@mui/material';
 import React, { useState } from 'react';
 import { useQuery } from 'react-query';
-import { useParams } from 'react-router-dom';
 import { teacherDashboardService } from '../TeacherDashboardService';
 
 const AddQuizDialogue = (props) => {
 
     const [name, setName] = useState('')
-    const { classroomId } = useParams();
 
     const handleClose = () => {
         props.handleClose()
     };
 
     const addQuiz = () => {
-        props.addClassroom({ name }, props.state)
+        props.addQuestionToQuiz({ name }, props.state)
         setName('')
         handleClose()
     }

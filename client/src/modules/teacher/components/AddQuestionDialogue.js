@@ -1,4 +1,4 @@
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField } from '@mui/material';
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, InputLabel, MenuItem, Select, TextField } from '@mui/material';
 import React, { useState } from 'react';
 import { useQuery } from 'react-query';
 import { teacherDashboardService } from '../TeacherDashboardService';
@@ -17,8 +17,8 @@ const AddQuestionDialogue = (props) => {
         props.handleClose()
     };
 
-    const addClassroom = () => {
-        props.addQuiz({ question, firstChoice, secondChoice, thirdChoice, fourthChoice, correctChoice }, props.state)
+    const addQuestion = () => {
+        props.addQuestionToQuiz({ question, firstChoice, secondChoice, thirdChoice, fourthChoice, correctChoice }, props.state)
         setQuestion('')
         setFirstChoice('')
         setSecondChoice('')
@@ -48,6 +48,7 @@ const AddQuestionDialogue = (props) => {
     const handleSecondChoice = e => setSecondChoice(e.target.value);
     const handleThirdChoice = e => setThirdChoice(e.target.value);
     const handleFourthChoice = e => setFourthChoice(e.target.value);
+    const handleCorrectChoice = e => setCorrectChoice(e.target.value);
 
     return (
         <Dialog open={props.openModal} onClose={handleClose}>
@@ -113,11 +114,24 @@ const AddQuestionDialogue = (props) => {
                     autoComplete="fourthChoice"
                     autoFocus
                 />
+                <FormControl fullWidth>
+                    <InputLabel id="demo-simple-select-label">Correct Choice</InputLabel>
+                    <Select
+                        value={correctChoice}
+                        label="Correct Choice"
+                        onChange={handleCorrectChoice}
+                    >
+                        <MenuItem value={1}>First Choice</MenuItem>
+                        <MenuItem value={2}>Second Choice</MenuItem>
+                        <MenuItem value={3}>Third Choice</MenuItem>
+                        <MenuItem value={4}>Fourth Choice</MenuItem>
+                    </Select>
+                </FormControl>
 
             </DialogContent>
             <DialogActions>
                 <Button onClick={handleClose}>Cancel</Button>
-                <Button onClick={addClassroom}>Add Question</Button>
+                <Button onClick={addQuestion}>Add Question</Button>
             </DialogActions>
         </Dialog>
     )
