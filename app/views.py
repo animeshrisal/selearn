@@ -2,8 +2,8 @@ from django.db import IntegrityError
 
 from rest_framework import viewsets, generics,  status
 
-from app.models import Classroom, Enrollment, Lesson, Quiz, UserLesson
-from app.serializers import ClassroomSerializer, EnrollmentSerializer, LessonSerializer, QuizSerializer, UserLessonDetailSerializer, UserLessonSerializer
+from app.models import Classroom, Enrollment, Lesson, Question, Quiz, UserLesson
+from app.serializers import ClassroomSerializer, EnrollmentSerializer, LessonSerializer, QuestionSerializer, QuizSerializer, UserLessonDetailSerializer, UserLessonSerializer
 from rest_framework.response import Response
 
 from .shared.helpers import StandardResultsSetPagination
@@ -169,3 +169,27 @@ class ClassroomQuizAPI(viewsets.ModelViewSet):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class QuizQuestionAPI(viewsets.ModelViewSet):
+    queryset = Question.objects.all()
+    serializer_class = QuestionSerializer
+    pagination_class = StandardResultsSetPagination
+
+    def list(self, request, pk):
+        queryset = self.queryset.filter(
+            classroom_id=pk).order_by('-created_at')
+        page = self.paginate_queryset(queryset)
+        serializer = QuestionSerializer(page, many=True)
+        result = self.get_paginated_response(serializer.data)
+        return result
+
+    def create(self, request, pk, quiz_pk):
+        context = {'classroom': pk, 'quiz_pk': quiz_pk}
+        serializer = QuestionSerializer(data=request.data, context=context)
+
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+

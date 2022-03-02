@@ -154,10 +154,23 @@ class QuestionSerializer(serializers.ModelSerializer):
     third_choice = serializers.CharField()
     fourth_choice = serializers.CharField()
 
+    def create(self, validated_data):
+        question = Question.objects.create(
+            question=validated_data['question'],
+            first_choice=validated_data['first_choice'],
+            second_choice=validated_data['second_choice'],
+            third_choice=validated_data['third_choice'],
+            fourth_choice=validated_data['fourth_choice'],
+            correct_choice=validated_data['correct_choice'],
+            quiz_id=self.context['quiz_pk'],
+        )
+
+        return question
+
     class Meta:
         model = Question
-        fields = ('id', 'question', 'first_choice',
-                  'third_choice', 'fourth_choice')
+        fields = ('id', 'question', 'first_choice','second_choice',
+                  'third_choice', 'fourth_choice', 'correct_choice')
 
 
 class CommentSerializer(serializers.ModelSerializer):
