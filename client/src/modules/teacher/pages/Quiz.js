@@ -73,7 +73,6 @@ const Quiz = (props) => {
 
     const { isLoading, data } = useQuery(["getQuestions"], () => teacherDashboardService.getQuestions(classroomId, quizId), {
         onSuccess: (data) => {
-            console.log(data)
         }
     });
 
@@ -91,7 +90,7 @@ const Quiz = (props) => {
         (question) => teacherDashboardService.postQuestion(classroomId, quizId, question),
         {
             onSuccess: () => {
-                queryClient.invalidateQueries(['getQuiz'])
+                queryClient.invalidateQueries(['getQuestions'])
             },
         }
     );

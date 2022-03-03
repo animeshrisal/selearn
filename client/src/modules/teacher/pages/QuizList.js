@@ -20,7 +20,6 @@ const QuizList = (props) => {
 
     const { isLoading, data } = useQuery(["getQuiz"], () => teacherDashboardService.getQuizzes(classroomId), {
         onSuccess: (data) => {
-            console.log(data)
         }
     });
 
@@ -43,7 +42,6 @@ const QuizList = (props) => {
     };
 
     const addQuiz = (classroom) => {
-        console.log(classroom)
         mutation.mutate(classroom)
     }
 

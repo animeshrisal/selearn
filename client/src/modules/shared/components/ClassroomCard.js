@@ -10,7 +10,6 @@ import Typography from '@mui/material/Typography';
 const ClassroomCard = (props) => {
 
     const goToClassroomPage = () => {
-        console.log("ASDASD")
         props.goToClassroomPage(props.id)
     };
 

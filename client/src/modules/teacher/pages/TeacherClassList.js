@@ -32,7 +32,6 @@ const TeacherClassList = (props) => {
     };
 
     const addClassroom = (classroom) => {
-        console.log(classroom)
         mutation.mutate(classroom)
     }
 
