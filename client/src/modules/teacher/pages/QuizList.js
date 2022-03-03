@@ -86,7 +86,7 @@ const QuizList = (props) => {
                     </TableContainer>
                     <AddQuizDialogue
                         openModal={openModal}
-                        addClassroom={addQuiz}
+                        addQuiz={addQuiz}
                         handleClose={handleClose}
                         state='Add'
                     />

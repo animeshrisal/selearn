@@ -12,7 +12,7 @@ const AddQuizDialogue = (props) => {
     };
 
     const addQuiz = () => {
-        props.addQuestionToQuiz({ name }, props.state)
+        props.addQuiz({ name }, props.state)
         setName('')
         handleClose()
     }
