@@ -12,6 +12,9 @@ class Settings(TimeStampedModel):
 class Category(TimeStampedModel):
     name = models.CharField(max_length=100)
 
+    def __str__(self):
+        return self.name
+
 class Classroom(TimeStampedModel):
     students = models.ManyToManyField(
         User, related_name='enrolled_students', blank=True, through='Enrollment')
