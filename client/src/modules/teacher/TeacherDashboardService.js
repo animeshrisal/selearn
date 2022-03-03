@@ -54,6 +54,14 @@ const getQuiz = (classroomId, quizId) => {
     });
 }
 
+const getQuestions = (classroomId, quizId) => {
+  return fetch(`${URL}/dashboard/classroom/${classroomId}/quiz/${quizId}/question/`, authenticatedGetRequestOption())
+  .then(handleResponse)
+  .then((quiz) => {
+    return quiz;
+  });
+}
+
 const postQuiz = (classroomId, quiz) => {
   return fetch(`${URL}/dashboard/classroom/${classroomId}/quiz/`, authenticatedRequestGenerator(quiz, "POST"))
     .then(handleResponse)
@@ -63,7 +71,7 @@ const postQuiz = (classroomId, quiz) => {
 }
 
 const postQuestion = (classroomId, quiz_id, question) => {
-  return fetch(`${URL}/dashboard/classroom/${classroomId}/quiz/${quiz_id}/question`, authenticatedRequestGenerator(question, "POST"))
+  return fetch(`${URL}/dashboard/classroom/${classroomId}/quiz/${quiz_id}/question/`, authenticatedRequestGenerator(question, "POST"))
     .then(handleResponse)
     .then((quiz) => {
       return quiz;
@@ -121,6 +129,7 @@ export const teacherDashboardService = {
   getLessons,
   getQuiz,
   getQuizzes,
+  getQuestions,
   postClassroom,
   postLesson,
   postQuiz,

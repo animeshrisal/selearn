@@ -175,9 +175,9 @@ class QuizQuestionAPI(viewsets.ModelViewSet):
     serializer_class = QuestionSerializer
     pagination_class = StandardResultsSetPagination
 
-    def list(self, request, pk):
+    def list(self, request, pk, quiz_pk):
         queryset = self.queryset.filter(
-            classroom_id=pk).order_by('-created_at')
+            quiz_id=quiz_pk).order_by('-created_at')
         page = self.paginate_queryset(queryset)
         serializer = QuestionSerializer(page, many=True)
         result = self.get_paginated_response(serializer.data)
