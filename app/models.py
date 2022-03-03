@@ -9,6 +9,8 @@ from app.shared.models import TimeStampedModel
 class Settings(TimeStampedModel):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
+class Category(TimeStampedModel):
+    name = models.CharField(max_length=100)
 
 class Classroom(TimeStampedModel):
     students = models.ManyToManyField(
@@ -20,6 +22,7 @@ class Classroom(TimeStampedModel):
     banner = models.ImageField(
         upload_to="banners", default="banners/default.png")
     active_status = models.BooleanField(default=True)
+    categories = models.ManyToManyField(Category, related_name='classroom_categories', blank=True)
 
     def __str__(self):
         return self.subject
