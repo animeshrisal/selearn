@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Classroom, Comment, Lesson, Question, Quiz, User, UserLesson
+from .models import Category, Classroom, Comment, Lesson, Question, Quiz, User, UserLesson
 from django.db import transaction
 from drf_spectacular.types import OpenApiTypes
 from drf_spectacular.utils import extend_schema_field
@@ -15,6 +15,12 @@ class UserSerializer(serializers.ModelSerializer):
         model = User
         fields = ('id', 'username')
 
+class CategorySerializer(serializers.ModelSerializer):
+    name = serializers.CharField()
+
+    class Meta:
+        model = Category
+        fields = ('id', 'name')
 
 class ClassroomSerializer(serializers.ModelSerializer):
     subject = serializers.CharField(required=True)
@@ -22,6 +28,8 @@ class ClassroomSerializer(serializers.ModelSerializer):
     banner = serializers.ImageField()
     teacher = UserSerializer(read_only=True)
     active_status = serializers.BooleanField()
+
+    categories = CategorySerializer(read_only=True, many=True)
 
     def create(self, validated_data):
         classroom = Classroom.objects.create(
@@ -37,7 +45,7 @@ class ClassroomSerializer(serializers.ModelSerializer):
     class Meta:
         model = Classroom
         fields = ('id', 'subject', 'description',
-                  'banner', 'teacher', 'active_status')
+                  'banner', 'teacher', 'active_status', 'categories')
 
 
 class LessonSerializer(serializers.ModelSerializer):
