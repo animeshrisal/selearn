@@ -14,18 +14,22 @@ const AddQuestionDialogue = (props) => {
 
 
     const handleClose = () => {
+        resetForm()
         props.handleClose()
     };
 
     const addQuestion = () => {
         props.addQuestionToQuiz({ question, firstChoice, secondChoice, thirdChoice, fourthChoice, correctChoice }, props.state)
+        handleClose()
+    }
+
+    const resetForm = () => {
         setQuestion('')
         setFirstChoice('')
         setSecondChoice('')
         setThirdChoice('')
         setFourthChoice('')
         setCorrectChoice('')
-        handleClose()
     }
 
     useQuery(["quiz", props.selectedRow], () =>
