@@ -118,7 +118,6 @@ class UserLessonDetailSerializer(serializers.Serializer):
     order = serializers.IntegerField(read_only=True)
     completed = serializers.BooleanField()
     completed_at = serializers.DateField()
-    order = serializers.IntegerField(read_only=True)
     previous = extend_schema_field(OpenApiTypes.INT)(
         serializers.PrimaryKeyRelatedField)(read_only=True)
     next = extend_schema_field(OpenApiTypes.INT)(
@@ -143,7 +142,7 @@ class EnrollmentSerializer(serializers.Serializer):
 class QuizSerializer(serializers.ModelSerializer):
     created_at = serializers.DateTimeField(read_only=True)
     name = serializers.CharField()
-    state = serializers.IntegerField()
+    state = serializers.IntegerField(read_only=True)
 
     def create(self, validated_data):
         quiz = Quiz.objects.create(
@@ -164,20 +163,25 @@ class QuestionSerializer(serializers.ModelSerializer):
     second_choice = serializers.CharField()
     third_choice = serializers.CharField()
     fourth_choice = serializers.CharField()
+    order = serializers.IntegerField(read_only=True)
+    previous = extend_schema_field(OpenApiTypes.INT)(
+        serializers.PrimaryKeyRelatedField)(read_only=True)
+    next = extend_schema_field(OpenApiTypes.INT)(
+        serializers.PrimaryKeyRelatedField)(read_only=True)
 
     def create(self, validated_data):
         with transaction.atomic():
 
-            quiz_questions = Question.objects.filter(
+            questions = Question.objects.filter(
                 quiz_id=self.context['quiz_pk']
             )
 
-            total_question_count = question.count()
+            total_question_count = questions.count()
 
             prev_question_id = None
 
             if total_question_count > 0:
-                prev_question = quiz_questions.last()
+                prev_question = questions.last()
                 prev_question_id = prev_question.id
 
             question = Question.objects.create(
@@ -201,7 +205,7 @@ class QuestionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Question
         fields = ('id', 'question', 'first_choice', 'second_choice',
-                  'third_choice', 'fourth_choice', 'correct_choice', 'order', 'previous_id', 'next_id')
+                  'third_choice', 'fourth_choice', 'correct_choice', 'order', 'previous', 'next')
 
 
 class CommentSerializer(serializers.ModelSerializer):
