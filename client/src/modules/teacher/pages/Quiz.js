@@ -114,6 +114,7 @@ const Quiz = (props) => {
         {
             onSuccess: () => {
                 queryClient.invalidateQueries(['getQuestions'])
+                queryClient.invalidateQueries(['quiz', selectedRow])
             },
         }
     );
