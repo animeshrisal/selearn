@@ -3,7 +3,7 @@ export function handleResponse(response) {
         const data = keysToCamel(text && JSON.parse(text));
 
         if (!response.ok) {
-            if(response.status === 401 && data.code === 'token_not_valid') {
+            if (response.status === 401 && data.code === 'token_not_valid') {
                 localStorage.removeItem("user");
             }
             const errors = data;
