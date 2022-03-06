@@ -1,6 +1,7 @@
 from django.db import IntegrityError
 
 from rest_framework import viewsets, generics,  status
+from app import serializers
 
 from app.models import Classroom, Enrollment, Lesson, Question, Quiz, UserLesson
 from app.serializers import ClassroomSerializer, EnrollmentSerializer, LessonSerializer, QuestionSerializer, QuizSerializer, UserLessonDetailSerializer, UserLessonSerializer
@@ -199,3 +200,16 @@ class QuizQuestionAPI(viewsets.ModelViewSet):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class SetQuizAsActiveAPI(generics.UpdateAPIView):
+    queryset = Quiz.objects.all()
+    serializer_class = QuizSerializer
+    pagination_class = StandardResultsSetPagination
+
+    def update(self, request, classroom_pk, pk):
+        quiz = Quiz.objects.get(classroom_id=classroom_pk, pk=pk)
+        quiz.state = 1
+        quiz.save()
+
+        return Response(status=status.HTTP_204_NO_CONTENT)

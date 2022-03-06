@@ -3,13 +3,37 @@ import { useParams } from 'react-router-dom';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { teacherDashboardService } from '../TeacherDashboardService';
 import AddIcon from '@mui/icons-material/Add';
-import { Box, Collapse, Fab, IconButton, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
+import { Box, Button, Collapse, Dialog, DialogActions, DialogContent, DialogTitle, Fab, Grid, IconButton, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
 import AddQuestionDialogue from '../components/AddQuestionDialogue';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import CheckIcon from '@mui/icons-material/Check';
 import ClearIcon from '@mui/icons-material/Clear';
 import EditIcon from '@mui/icons-material/Edit';
+
+const SetQuizAsActiveModal = (props) => {
+
+    const handleClose = () => {
+        props.handleClose()
+    }
+
+    const setQuizAsActive = () => {
+        props.setQuizAsActive()
+    }
+
+    return (
+        <Dialog open={props.openModal} onClose={handleClose}>
+            <DialogTitle>Warning</DialogTitle>
+            <DialogContent>
+                Are you sure you want to set this quiz as active ? You will be unable to later edit it.
+            </DialogContent>
+            <DialogActions>
+                <Button onClick={handleClose}>Cancel</Button>
+                <Button onClick={setQuizAsActive}>Set Active</Button>
+            </DialogActions>
+        </Dialog>
+    )
+}
 
 const Row = (props) => {
     const { row } = props;
@@ -89,6 +113,7 @@ const Quiz = (props) => {
     const [openModal, setOpenModal] = useState(false)
     const [selectedRow, setSelectedRow] = useState(0)
     const [selectedState, setSelectedState] = useState('Add')
+    const [openQuizActiveModal, setOpenQuizActiveModal] = useState(false)
 
     const handleClickOpen = () => {
         setSelectedRow(0)
@@ -119,11 +144,31 @@ const Quiz = (props) => {
         }
     );
 
+    const quizStateMutation = useMutation(
+        () => teacherDashboardService.setQuizAsActive(classroomId, quizId),
+        {
+            onSuccess: () => {
+                queryClient.invalidateQueries(['getQuestions'])
+            },
+        }
+
+    )
+
     const addQuestionToQuiz = (question) => {
-        console.log("00000")
-        console.log(selectedState)
         mutation.mutate({ question, selectedState })
     }
+
+    const setQuizAsActive = () => {
+        quizStateMutation.mutate()
+    }
+
+    const handleOpenQuizActiveModal = () => {
+        setOpenQuizActiveModal(true)
+    }
+
+    const handleCloseQuizActiveModal = () => {
+        setOpenQuizActiveModal(false);
+    };
 
     if (isLoading) {
         return <div>Loading...</div>;
@@ -131,6 +176,9 @@ const Quiz = (props) => {
     if (data) {
         return (
             <React.Fragment>
+                <Grid item xs={4}>
+                    <Button onClick={() => handleOpenQuizActiveModal()}>Set as active</Button>
+                </Grid>
                 <TableContainer component={Paper}>
                     <Table aria-label="collapsible table">
                         <TableHead>
@@ -157,6 +205,13 @@ const Quiz = (props) => {
                     quizId={quizId}
                     selectedRow={selectedRow}
                 />
+
+                <SetQuizAsActiveModal
+                    openModal={openQuizActiveModal}
+                    handleClose={handleCloseQuizActiveModal}
+                    setQuizAsActive={setQuizAsActive}
+                />
+
                 <Fab onClick={handleClickOpen} onClose={handleClose} color="secondary" aria-label="add">
                     <AddIcon />
                 </Fab>

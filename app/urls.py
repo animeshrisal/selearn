@@ -41,5 +41,7 @@ urlpatterns = [
          views.QuizQuestionAPI.as_view({'get': 'list', 'post': 'create'}), name="quiz"),
     path('classroom/<int:classroom_pk>/quiz/<int:quiz_pk>/question/<int:pk>/',
          views.QuizQuestionAPI.as_view({'get': 'retrieve', 'put': 'update', 'delete': 'destroy'}), name="quiz"),
+    path('classroom/<int:classroom_pk>/quiz/<int:pk>/',
+         views.SetQuizAsActiveAPI.as_view(), name="quiz"),
 
 ]

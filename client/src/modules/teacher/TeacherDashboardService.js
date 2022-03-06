@@ -138,6 +138,14 @@ const updateClassroom = (classroom, classroomId) => {
     });
 }
 
+const setQuizAsActive = (classroomId, quizId) => {
+  return fetch(`${URL}/dashboard/classroom/${classroomId}/quiz/${quizId}/`, authenticatedRequestGenerator({}, "PUT"))
+    .then(handleResponse)
+    .then((question) => {
+      return question;
+    });
+}
+
 export const teacherDashboardService = {
   getClassroom,
   getClassrooms,
@@ -153,5 +161,6 @@ export const teacherDashboardService = {
   postQuestion,
   updateClassroom,
   updateLesson,
-  updateQuestion
+  updateQuestion,
+  setQuizAsActive
 };

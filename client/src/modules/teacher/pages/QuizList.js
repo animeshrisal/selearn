@@ -14,11 +14,10 @@ import TableRow from '@mui/material/TableRow';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 
 const stateChip = (state) => {
+    console.log(state)
     if (state === 0) {
-        return <Chip label="Created" color="primary" />
-    } else if (state === 1) {
         return <Chip label="To Review" color="primary" />
-    } else if (state === 2) {
+    } else if (state === 1) {
         return <Chip label="Active" color="primary" />
     } else {
         return <Chip label='Archived' color='primary' />
