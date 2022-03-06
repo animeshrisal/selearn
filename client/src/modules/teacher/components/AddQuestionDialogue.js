@@ -28,7 +28,7 @@ const AddQuestionDialogue = (props) => {
         handleClose()
     }
 
-    useQuery(["quiz", props.id], () =>
+    useQuery(["quiz", props.selectedRow], () =>
         teacherDashboardService.getQuestion(props.classroomId, props.quizId, props.selectedRow), {
         refetchOnWindowFocus: false,
         enabled: props.state === "Add" ? false : true,
