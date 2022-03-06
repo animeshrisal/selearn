@@ -54,6 +54,14 @@ const getQuiz = (classroomId, quizId) => {
     });
 }
 
+const getQuestion = (classroomId, quizId, questionId) => {
+  return fetch(`${URL}/dashboard/classroom/${classroomId}/quiz/${quizId}/question/${questionId}/`, authenticatedGetRequestOption())
+  .then(handleResponse)
+  .then((quiz) => {
+    return quiz;
+  });
+}
+
 const getQuestions = (classroomId, quizId) => {
   return fetch(`${URL}/dashboard/classroom/${classroomId}/quiz/${quizId}/question/`, authenticatedGetRequestOption())
   .then(handleResponse)
@@ -111,6 +119,15 @@ const updateLesson = (classroomId, lessonId, lesson) => {
     });
 }
 
+const updateQuestion = (classroomId, quizId, questionId, question) => {
+  console.log("YTeet")
+  return fetch(`${URL}/dashboard/classroom/${classroomId}/quiz/${quizId}/question/${questionId}/`, authenticatedRequestGenerator(question, "PUT"))
+  .then(handleResponse)
+  .then((question) => {
+    return question;
+  });
+}
+
 const updateClassroom = (classroom, classroomId) => {
   return fetch(
     `${URL}/dashboard/classroom/${classroomId}/`,
@@ -129,6 +146,7 @@ export const teacherDashboardService = {
   getLessons,
   getQuiz,
   getQuizzes,
+  getQuestion,
   getQuestions,
   postClassroom,
   postLesson,
@@ -136,4 +154,5 @@ export const teacherDashboardService = {
   postQuestion,
   updateClassroom,
   updateLesson,
+  updateQuestion
 };

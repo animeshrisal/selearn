@@ -29,7 +29,7 @@ const AddQuestionDialogue = (props) => {
     }
 
     useQuery(["quiz", props.id], () =>
-        teacherDashboardService.getQuestion(props.classroomId), {
+        teacherDashboardService.getQuestion(props.classroomId, props.quizId, props.selectedRow), {
         refetchOnWindowFocus: false,
         enabled: props.state === "Add" ? false : true,
         onSuccess: (question) => {

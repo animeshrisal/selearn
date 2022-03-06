@@ -170,12 +170,13 @@ class ClassroomQuizAPI(viewsets.ModelViewSet):
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+
 class QuizQuestionAPI(viewsets.ModelViewSet):
     queryset = Question.objects.all()
     serializer_class = QuestionSerializer
     pagination_class = StandardResultsSetPagination
 
-    def list(self, request, pk, quiz_pk):
+    def list(self, request, classroom_pk, quiz_pk):
         queryset = self.queryset.filter(
             quiz_id=quiz_pk).order_by('-created_at')
         page = self.paginate_queryset(queryset)
@@ -183,8 +184,14 @@ class QuizQuestionAPI(viewsets.ModelViewSet):
         result = self.get_paginated_response(serializer.data)
         return result
 
-    def create(self, request, pk, quiz_pk):
-        context = {'classroom': pk, 'quiz_pk': quiz_pk}
+    def retrieve(self, request, classroom_pk, quiz_pk, pk):
+        question = Question.objects.get(id=pk, quiz_id=quiz_pk)
+        serializer = QuestionSerializer(question)
+
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def create(self, request, classroom_pk, quiz_pk):
+        context = {'classroom': classroom_pk, 'quiz_pk': quiz_pk}
         serializer = QuestionSerializer(data=request.data, context=context)
 
         if serializer.is_valid():
@@ -192,4 +199,3 @@ class QuizQuestionAPI(viewsets.ModelViewSet):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-

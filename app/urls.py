@@ -37,9 +37,9 @@ urlpatterns = [
          views.ClassroomQuizAPI.as_view({'get': 'list', 'post': 'create'}), name="quiz"),
     path('classroom/<int:pk>/quiz/<int:quiz_pk>',
          views.ClassroomQuizAPI.as_view({'get': 'retrieve', 'put': 'update', 'delete': 'destroy'}), name="quiz"),
-    path('classroom/<int:pk>/quiz/<int:quiz_pk>/question/',
+    path('classroom/<int:classroom_pk>/quiz/<int:quiz_pk>/question/',
          views.QuizQuestionAPI.as_view({'get': 'list', 'post': 'create'}), name="quiz"),
-    path('classroom/<int:pk>/quiz/<int:quiz_pk>/question/<int:question_pk>/',
+    path('classroom/<int:classroom_pk>/quiz/<int:quiz_pk>/question/<int:pk>/',
          views.QuizQuestionAPI.as_view({'get': 'retrieve', 'put': 'update', 'delete': 'destroy'}), name="quiz"),
 
 ]
