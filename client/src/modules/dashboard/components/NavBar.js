@@ -12,7 +12,7 @@ import { useNavigate } from 'react-router-dom';
 
 const NavBar = (props) => {
   let navigate = useNavigate();
-  const { state, dispatch } = useAuthentication();
+  const { dispatch } = useAuthentication();
   const [anchorElUser, setAnchorElUser] = React.useState(null);
   const { disconnect } = useSocket();
 
@@ -40,11 +40,6 @@ const NavBar = (props) => {
 
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
-  };
-
-  const logoutUser = () => {
-    dispatch({ type: "LOGOUT" });
-    disconnect();
   };
 
   return (
