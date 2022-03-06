@@ -47,7 +47,7 @@ const getQuizzes = (classroomId) => {
 }
 
 const getQuiz = (classroomId, quizId) => {
-  return fetch(`${URL}/dashboard/classroom/${classroomId}/quiz/${quizId}`, authenticatedGetRequestOption())
+  return fetch(`${URL}/dashboard/classroom/${classroomId}/quiz/${quizId}/`, authenticatedGetRequestOption())
     .then(handleResponse)
     .then((quiz) => {
       return quiz;
@@ -139,12 +139,21 @@ const updateClassroom = (classroom, classroomId) => {
 }
 
 const setQuizAsActive = (classroomId, quizId) => {
-  return fetch(`${URL}/dashboard/classroom/${classroomId}/quiz/${quizId}/`, authenticatedRequestGenerator({}, "PUT"))
+  return fetch(`${URL}/dashboard/classroom/${classroomId}/quiz/${quizId}/active`, authenticatedRequestGenerator({}, "PUT"))
     .then(handleResponse)
     .then((question) => {
       return question;
     });
 }
+
+const setQuizAsArchived = (classroomId, quizId) => {
+  return fetch(`${URL}/dashboard/classroom/${classroomId}/quiz/${quizId}/archive`, authenticatedRequestGenerator({}, "PUT"))
+    .then(handleResponse)
+    .then((question) => {
+      return question;
+    });
+}
+
 
 export const teacherDashboardService = {
   getClassroom,
@@ -162,5 +171,6 @@ export const teacherDashboardService = {
   updateClassroom,
   updateLesson,
   updateQuestion,
-  setQuizAsActive
+  setQuizAsActive,
+  setQuizAsArchived
 };

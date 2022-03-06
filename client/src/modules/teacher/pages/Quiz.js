@@ -35,6 +35,31 @@ const SetQuizAsActiveModal = (props) => {
     )
 }
 
+const SetQuizAsArchivedModal = (props) => {
+
+    const handleClose = () => {
+        props.handleClose()
+    }
+
+    const setQuizAsActive = () => {
+        props.setQuizAsArchived()
+    }
+
+    return (
+        <Dialog open={props.openModal} onClose={handleClose}>
+            <DialogTitle>Warning</DialogTitle>
+            <DialogContent>
+                Are you sure you want to set this quiz as archived ? If you archived it students will no longer be able to participate in the quiz.
+            </DialogContent>
+            <DialogActions>
+                <Button onClick={handleClose}>Cancel</Button>
+                <Button onClick={setQuizAsActive}>Set Archived</Button>
+            </DialogActions>
+        </Dialog>
+    )
+}
+
+
 const Row = (props) => {
     const { row } = props;
     const [open, setOpen] = useState(false);
@@ -105,15 +130,31 @@ const Quiz = (props) => {
     const queryClient = useQueryClient()
     const { classroomId, quizId } = useParams();
 
+    const [openModal, setOpenModal] = useState(false)
+    const [selectedRow, setSelectedRow] = useState(0)
+    const [selectedState, setSelectedState] = useState('Add')
+    const [openQuizActiveModal, setOpenQuizActiveModal] = useState(false)
+    const [openQuizArchivedModal, setOpenQuizArchivedModal] = useState(false)
+    const [name, setName] = useState('')
+    const [state, setState] = useState('')
+
+    useQuery(["quiz", quizId], () =>
+        teacherDashboardService.getQuiz(classroomId, quizId), {
+        refetchOnWindowFocus: false,
+        enabled: props.state === "Add" ? false : true,
+        onSuccess: (quiz) => {
+            setName(quiz.name)
+            setState(quiz.state)
+        }
+    }
+    );
+
     const { isLoading, data } = useQuery(["getQuestions"], () => teacherDashboardService.getQuestions(classroomId, quizId), {
         onSuccess: (data) => {
         }
     });
 
-    const [openModal, setOpenModal] = useState(false)
-    const [selectedRow, setSelectedRow] = useState(0)
-    const [selectedState, setSelectedState] = useState('Add')
-    const [openQuizActiveModal, setOpenQuizActiveModal] = useState(false)
+
 
     const handleClickOpen = () => {
         setSelectedRow(0)
@@ -139,16 +180,20 @@ const Quiz = (props) => {
         {
             onSuccess: () => {
                 queryClient.invalidateQueries(['getQuestions'])
-                queryClient.invalidateQueries(['quiz', selectedRow])
+                queryClient.invalidateQueries(['quiz', quizId])
             },
         }
     );
 
     const quizStateMutation = useMutation(
-        () => teacherDashboardService.setQuizAsActive(classroomId, quizId),
+        () => {
+            if (state === 0) return teacherDashboardService.setQuizAsActive(classroomId, quizId)
+            else if (state === 1) return teacherDashboardService.setQuizAsArchived(classroomId, quizId)
+        },
         {
             onSuccess: () => {
                 queryClient.invalidateQueries(['getQuestions'])
+                queryClient.invalidateQueries(['quiz',])
             },
         }
 
@@ -160,6 +205,7 @@ const Quiz = (props) => {
 
     const setQuizAsActive = () => {
         quizStateMutation.mutate()
+        handleCloseQuizActiveModal()
     }
 
     const handleOpenQuizActiveModal = () => {
@@ -170,6 +216,20 @@ const Quiz = (props) => {
         setOpenQuizActiveModal(false);
     };
 
+
+    const setQuizAsArchived = () => {
+        quizStateMutation.mutate()
+        handleCloseQuizArchivedModal()
+    }
+
+    const handleOpenQuizArchivedModal = () => {
+        setOpenQuizArchivedModal(true)
+    }
+
+    const handleCloseQuizArchivedModal = () => {
+        setOpenQuizArchivedModal(false);
+    };
+
     if (isLoading) {
         return <div>Loading...</div>;
     }
@@ -177,7 +237,9 @@ const Quiz = (props) => {
         return (
             <React.Fragment>
                 <Grid item xs={4}>
-                    <Button onClick={() => handleOpenQuizActiveModal()}>Set as active</Button>
+                    {state === 0 && <Button onClick={() => handleOpenQuizActiveModal()}>Set as active</Button>}
+                    {state === 1 && <Button onClick={() => handleOpenQuizArchivedModal()}>Archive Quiz</Button>}
+                    {state === 2 && <div>Archived </div>}
                 </Grid>
                 <TableContainer component={Paper}>
                     <Table aria-label="collapsible table">
@@ -210,6 +272,13 @@ const Quiz = (props) => {
                     openModal={openQuizActiveModal}
                     handleClose={handleCloseQuizActiveModal}
                     setQuizAsActive={setQuizAsActive}
+                />
+
+
+                <SetQuizAsArchivedModal
+                    openModal={openQuizArchivedModal}
+                    handleClose={handleCloseQuizArchivedModal}
+                    setQuizAsArchived={setQuizAsArchived}
                 />
 
                 <Fab onClick={handleClickOpen} onClose={handleClose} color="secondary" aria-label="add">

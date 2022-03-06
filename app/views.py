@@ -153,13 +153,19 @@ class ClassroomQuizAPI(viewsets.ModelViewSet):
     serializer_class = QuizSerializer
     pagination_class = StandardResultsSetPagination
 
-    def list(self, request, pk):
+    def list(self, request, classroom_pk):
         queryset = self.queryset.filter(
-            classroom_id=pk).order_by('-created_at')
+            classroom_id=classroom_pk).order_by('-created_at')
         page = self.paginate_queryset(queryset)
         serializer = QuizSerializer(page, many=True)
         result = self.get_paginated_response(serializer.data)
         return result
+
+    def retrieve(self, request, classroom_pk, pk):
+        question = Quiz.objects.get(classroom_id=classroom_pk, id=pk)
+        serializer = QuizSerializer(question)
+
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
     def create(self, request, pk):
         context = {'classroom': pk}
@@ -210,6 +216,19 @@ class SetQuizAsActiveAPI(generics.UpdateAPIView):
     def update(self, request, classroom_pk, pk):
         quiz = Quiz.objects.get(classroom_id=classroom_pk, pk=pk)
         quiz.state = 1
+        quiz.save()
+
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class SetQuizAsArchivedAPI(generics.UpdateAPIView):
+    queryset = Quiz.objects.all()
+    serializer_class = QuizSerializer
+    pagination_class = StandardResultsSetPagination
+
+    def update(self, request, classroom_pk, pk):
+        quiz = Quiz.objects.get(classroom_id=classroom_pk, pk=pk)
+        quiz.state = 2
         quiz.save()
 
         return Response(status=status.HTTP_204_NO_CONTENT)
