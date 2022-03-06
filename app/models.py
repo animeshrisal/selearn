@@ -86,6 +86,14 @@ class Quiz(TimeStampedModel):
     student = models.ManyToManyField(User, blank=True, through='UserQuiz')
     name = models.CharField(max_length=200)
 
+    '''
+    0 = Initial State
+    1 = In Review
+    2 = Ready for students to start quiz. Can't go back
+    '''
+
+    state = models.IntegerField(default=0)
+
     def __str__(self):
         return self.name
 
@@ -93,6 +101,7 @@ class Quiz(TimeStampedModel):
 class UserQuiz(TimeStampedModel):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE)
+
     completed = models.BooleanField(default=False)
 
 
@@ -103,20 +112,16 @@ class Question(TimeStampedModel):
     third_choice = models.TextField()
     fourth_choice = models.TextField()
     correct_choice = models.IntegerField()
+    order = models.IntegerField()
+    previous = models.ForeignKey('self', blank=True, null=True,
+                                 related_name='previous_question', on_delete=models.SET_NULL)
+    next = models.ForeignKey('self', blank=True, null=True,
+                             related_name='next_question', on_delete=models.SET_NULL)
     quiz = models.ForeignKey(
         Quiz, on_delete=models.CASCADE, related_name='quiz_question')
 
-    user_answer = models.ManyToManyField(User, through='UserAnswer')
-
     def __str__(self):
         return self.question
-
-
-class UserAnswer(TimeStampedModel):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    question = models.ForeignKey(Question, on_delete=models.CASCADE)
-    user_choice = models.IntegerField(blank=True)
-
 
 class Comment(TimeStampedModel):
     lesson = models.ForeignKey(

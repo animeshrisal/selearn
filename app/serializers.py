@@ -15,12 +15,14 @@ class UserSerializer(serializers.ModelSerializer):
         model = User
         fields = ('id', 'username')
 
+
 class CategorySerializer(serializers.ModelSerializer):
     name = serializers.CharField()
 
     class Meta:
         model = Category
         fields = ('id', 'name')
+
 
 class ClassroomSerializer(serializers.ModelSerializer):
     subject = serializers.CharField(required=True)
@@ -141,6 +143,7 @@ class EnrollmentSerializer(serializers.Serializer):
 class QuizSerializer(serializers.ModelSerializer):
     created_at = serializers.DateTimeField(read_only=True)
     name = serializers.CharField()
+    state = serializers.IntegerField()
 
     def create(self, validated_data):
         quiz = Quiz.objects.create(
@@ -152,7 +155,7 @@ class QuizSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Quiz
-        fields = ('id', 'name', 'created_at')
+        fields = ('id', 'name', 'created_at', 'state')
 
 
 class QuestionSerializer(serializers.ModelSerializer):
@@ -163,22 +166,42 @@ class QuestionSerializer(serializers.ModelSerializer):
     fourth_choice = serializers.CharField()
 
     def create(self, validated_data):
-        question = Question.objects.create(
-            question=validated_data['question'],
-            first_choice=validated_data['first_choice'],
-            second_choice=validated_data['second_choice'],
-            third_choice=validated_data['third_choice'],
-            fourth_choice=validated_data['fourth_choice'],
-            correct_choice=validated_data['correct_choice'],
-            quiz_id=self.context['quiz_pk'],
-        )
+        with transaction.atomic():
+
+            quiz_questions = Question.objects.filter(
+                quiz_id=self.context['quiz_pk']
+            )
+
+            total_question_count = question.count()
+
+            prev_question_id = None
+
+            if total_question_count > 0:
+                prev_question = quiz_questions.last()
+                prev_question_id = prev_question.id
+
+            question = Question.objects.create(
+                question=validated_data['question'],
+                first_choice=validated_data['first_choice'],
+                second_choice=validated_data['second_choice'],
+                third_choice=validated_data['third_choice'],
+                fourth_choice=validated_data['fourth_choice'],
+                correct_choice=validated_data['correct_choice'],
+                quiz_id=self.context['quiz_pk'],
+                order=(total_question_count+1),
+                previous_id=prev_question_id
+            )
+
+            if total_question_count > 0:
+                prev_question.next_id = question.id
+                prev_question.save()
 
         return question
 
     class Meta:
         model = Question
-        fields = ('id', 'question', 'first_choice','second_choice',
-                  'third_choice', 'fourth_choice', 'correct_choice')
+        fields = ('id', 'question', 'first_choice', 'second_choice',
+                  'third_choice', 'fourth_choice', 'correct_choice', 'order', 'previous_id', 'next_id')
 
 
 class CommentSerializer(serializers.ModelSerializer):
