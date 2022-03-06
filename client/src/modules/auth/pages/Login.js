@@ -22,30 +22,30 @@ export default function Login() {
 
     const { dispatch } = useAuthentication();
     const { connect } = useSocket();
-    
+
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
 
     const handleUsername = e => setUsername(e.target.value);
     const handlePassword = e => setPassword(e.target.value);
 
-    const mutation = useMutation((user) => authenticationService.login({username, password}), {
-      onSuccess: (mutation) => {
-        dispatch({
-          type: "LOGIN",
-          payload: mutation,
-        });
-  
-        connect(mutation.access);
-      },
+    const mutation = useMutation((user) => authenticationService.login({ username, password }), {
+        onSuccess: (mutation) => {
+            dispatch({
+                type: "LOGIN",
+                payload: mutation,
+            });
+
+            connect(mutation.access);
+        },
     });
-  
+
     if (mutation.isSuccess) {
-      return <Navigate to="/dashboard/" />;
+        return <Navigate to="/dashboard/" />;
     }
-  
+
     const handleLogin = () => {
-      mutation.mutate({username, password});
+        mutation.mutate({ username, password });
     };
 
     return (

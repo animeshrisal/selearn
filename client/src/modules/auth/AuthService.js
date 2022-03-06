@@ -69,7 +69,7 @@ function logout() {
   localStorage.removeItem("user");
 }
 
-function activateUser({uid, token}) {
+function activateUser({ uid, token }) {
   const formData = new FormData();
   formData.append("uid", uid);
   formData.append("token", token);
