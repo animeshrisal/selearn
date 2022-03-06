@@ -1,4 +1,4 @@
-import { Fab, Grid, IconButton, Paper } from '@mui/material';
+import { Chip, Fab, Grid, IconButton, Paper } from '@mui/material';
 import React, { useState } from 'react';
 import AddIcon from '@mui/icons-material/Add';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -12,6 +12,18 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+
+const stateChip = (state) => {
+    if (state === 0) {
+        return <Chip label="Created" color="primary" />
+    } else if (state === 1) {
+        return <Chip label="To Review" color="primary" />
+    } else if (state === 2) {
+        return <Chip label="Active" color="primary" />
+    } else {
+        return <Chip label='Archived' color='primary' />
+    }
+}
 
 const QuizList = (props) => {
     const navigate = useNavigate();
@@ -61,6 +73,7 @@ const QuizList = (props) => {
                             <TableHead>
                                 <TableRow>
                                     <TableCell>Quiz</TableCell>
+                                    <TableCell align="right">Status</TableCell>
                                     <TableCell align="right">View</TableCell>
                                 </TableRow>
                             </TableHead>
@@ -72,6 +85,9 @@ const QuizList = (props) => {
                                     >
                                         <TableCell component="th" scope="row">
                                             {row.name}
+                                        </TableCell>
+                                        <TableCell align="right">
+                                            {stateChip(row.state)}
                                         </TableCell>
                                         <TableCell align="right">
                                             <IconButton onClick={() => goToQuizPage(row.id)} sx={{ p: 0 }}>
