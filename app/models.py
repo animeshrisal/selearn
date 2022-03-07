@@ -101,9 +101,8 @@ class Quiz(TimeStampedModel):
 class UserQuiz(TimeStampedModel):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE)
-
-    completed = models.BooleanField(default=False)
-
+    result = models.BooleanField(blank=True, null=True)
+    score = models.IntegerField(blank=True, null=True)
 
 class Question(TimeStampedModel):
     question = models.CharField(max_length=200)
@@ -122,6 +121,11 @@ class Question(TimeStampedModel):
 
     def __str__(self):
         return self.question
+
+class UserQuestion(TimeStampedModel):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    question = models.ForeignKey(Question, on_delete=models.CASCADE)
+    user_choice = models.IntegerField()
 
 class Comment(TimeStampedModel):
     lesson = models.ForeignKey(

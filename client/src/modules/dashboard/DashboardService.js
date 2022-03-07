@@ -88,6 +88,13 @@ const completeLesson = (classroomId, lessonId) => {
     });
 }
 
+const completeQuiz = (classroomId, quizId, quizState) => {
+  return fetch(
+    `${URL}/dashboard/classroom/${classroomId}/quiz/${quizId}/complete`,
+    authenticatedRequestGenerator(quizState, "POST")
+  )
+}
+
 const getQuizzes = (classroomId) => {
   return fetch(`${URL}/dashboard/classroom/${classroomId}/student_quiz/`, authenticatedGetRequestOption())
     .then(handleResponse)
@@ -108,6 +115,7 @@ const getQuestions = (classroomId, quizId) => {
 export const dashboardService = {
   createEnrollment,
   completeLesson,
+  completeQuiz,
   getClassrooms,
   getClassroom,
   getEnrollmentStatus,

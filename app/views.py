@@ -1,9 +1,10 @@
 from django.db import IntegrityError
+from django.http import HttpResponse
 
 from rest_framework import viewsets, generics,  status
 from app import serializers
 
-from app.models import Classroom, Enrollment, Lesson, Question, Quiz, UserLesson
+from app.models import Classroom, Enrollment, Lesson, Question, Quiz, UserLesson, UserQuestion, UserQuiz
 from app.serializers import ClassroomSerializer, EnrollmentSerializer, LessonSerializer, QuestionSerializer, QuizSerializer, UserLessonDetailSerializer, UserLessonSerializer
 from rest_framework.response import Response
 
@@ -245,3 +246,33 @@ class StudentClassroomQuizAPI(viewsets.ModelViewSet):
         serializer = QuizSerializer(page, many=True)
         result = self.get_paginated_response(serializer.data)
         return result
+
+class StudentClassroomQuizCompleteAPI(viewsets.ModelViewSet):
+    queryset = Quiz.objects.all()
+    serializer_class = QuizSerializer
+    pagination_class = StandardResultsSetPagination
+
+    def create(self, request, classroom_pk, pk):
+        
+        with transaction.atomic():
+            quiz = Quiz.objects.get(pk=pk, classroom_id=classroom_pk)
+            user_quiz = UserQuiz.objects.create(
+                user_id = request.user.id,
+                quiz_id = pk
+            )
+
+
+            user_answers = []
+            user_submitted_answers = request.POST
+            for answer in user_submitted_answers:
+                user_question = UserQuestion(
+                    user_id = request.user.id,
+                    question_id = answer,
+                    user_choice = user_submitted_answers[answer]
+                )
+
+                user_answers.append(user_question)
+
+            UserQuestion.objects.bulk_create(user_answers)
+
+        return Response(status=status.HTTP_204_NO_CONTENT)
