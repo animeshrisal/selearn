@@ -256,11 +256,11 @@ class StudentClassroomQuizCompleteAPI(viewsets.ModelViewSet):
         
         with transaction.atomic():
             quiz = Quiz.objects.get(pk=pk, classroom_id=classroom_pk)
+
             user_quiz = UserQuiz.objects.create(
                 user_id = request.user.id,
                 quiz_id = pk
             )
-
 
             user_answers = []
             user_submitted_answers = request.POST
