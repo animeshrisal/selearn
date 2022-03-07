@@ -45,5 +45,6 @@ urlpatterns = [
          views.SetQuizAsActiveAPI.as_view(), name="quiz"),
     path('classroom/<int:classroom_pk>/quiz/<int:pk>/archive',
          views.SetQuizAsArchivedAPI.as_view(), name="quiz"),
-
+    path('classroom/<int:classroom_pk>/student_quiz/',
+         views.StudentClassroomQuizAPI.as_view({'get': 'list'}), name="quiz"),
 ]

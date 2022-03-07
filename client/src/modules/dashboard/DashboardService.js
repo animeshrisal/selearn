@@ -88,6 +88,15 @@ const completeLesson = (classroomId, lessonId) => {
     });
 }
 
+const getQuizzes = (classroomId) => {
+  return fetch(`${URL}/dashboard/classroom/${classroomId}/student_quiz/`, authenticatedGetRequestOption())
+    .then(handleResponse)
+    .then((quizzes) => {
+      return quizzes;
+    });
+}
+
+
 export const dashboardService = {
   createEnrollment,
   completeLesson,
@@ -97,5 +106,6 @@ export const dashboardService = {
   postClassroom,
   getLessons,
   getLesson,
-  getUserLessons
+  getUserLessons,
+  getQuizzes
 };

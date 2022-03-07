@@ -41,6 +41,10 @@ const Classroom = (props) => {
         mutation.mutate()
     }
 
+    const goToUserQuiz = () => {
+        navigate(`quiz_list`)
+    }
+
     const goToLessonPage = (id) => {
         navigate(`lesson/${id}`);
     };
@@ -53,6 +57,7 @@ const Classroom = (props) => {
         return (
             <Container>
                 <Grid container spacing={2}>
+
                     <Grid container direction="row" justifyContent="flex-end" alignItems="flex-start">
                         {isLoadingEnrollmentStatus ? <CircularProgress /> :
                             enrollmentStatus.enrolled || enrollmentStatus.enrolled_at
@@ -130,6 +135,10 @@ const Classroom = (props) => {
                             </CardContent>
 
                         </Card>
+                        <Grid >
+                            <Button onClick={goToUserQuiz}>Take Quiz</Button>
+                        </Grid>
+
                     </Grid>
                 </Grid>
             </Container>
