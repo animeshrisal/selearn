@@ -32,15 +32,50 @@ where
 	app_lesson.id = %s'''
 
 
-score_calcuator_query = '''
-	SELECT 
-		app_question.id, app_userquestion.user_id , app_question.quiz_id ,
-	CASE WHEN app_question.correct_choice = app_userquestion.user_choice 
-		THEN '1' 
-		ELSE '0' 
-	END 
-	AS result
-	FROM app_question 
-	INNER JOIN app_userquestion ON app_userquestion.id = app_question.quiz_id
-	where app_question.quiz_id = %s and app_userquestion.user_id = %s
+quiz_user_choices_query = '''
+select
+		app_question.id as question,
+		case
+			when app_question.correct_choice = app_userquestion.user_choice 
+    then '1'
+		else '0'
+	end 
+  as result
+from
+		app_question
+inner join app_userquestion on
+		app_userquestion.question_id = app_question.id
+where
+		app_question.quiz_id = %s
+	and app_userquestion.user_id = %s
+
+'''
+
+user_score_result_query = '''
+	select
+		1 as id,
+		count(result) as score
+	from
+		(
+			select
+					app_question.id as question,
+					case
+						when app_question.correct_choice = app_userquestion.user_choice 
+				then '1'
+					else '0'
+				end 
+			as result
+			from
+					app_question
+			inner join app_userquestion on
+					app_userquestion.question_id = app_question.id
+			where
+					app_question.quiz_id = %s
+				and app_userquestion.user_id = %s
+
+	) as user_quiz
+	where
+		result = '1'
+	group by
+		result
 '''

@@ -5,7 +5,7 @@ from rest_framework import viewsets, generics,  status
 from app import serializers
 
 from app.models import Classroom, Enrollment, Lesson, Question, Quiz, UserLesson, UserQuestion, UserQuiz
-from app.serializers import ClassroomSerializer, EnrollmentSerializer, LessonSerializer, QuestionSerializer, QuizSerializer, UserLessonDetailSerializer, UserLessonSerializer
+from app.serializers import ClassroomSerializer, EnrollmentSerializer, LessonSerializer, QuestionSerializer, QuizSerializer, StudentScoreResultCalculatorSerializer, UserLessonDetailSerializer, UserLessonSerializer
 from rest_framework.response import Response
 
 from .shared.helpers import StandardResultsSetPagination
@@ -14,7 +14,7 @@ from django.db import transaction
 
 import traceback
 
-from .queries import user_lesson_query, user_lesson_list_query
+from .queries import user_lesson_query, user_lesson_list_query, quiz_user_choices_query, user_score_result_query
 
 # Create your views here.
 
@@ -274,5 +274,11 @@ class StudentClassroomQuizCompleteAPI(viewsets.ModelViewSet):
                 user_answers.append(user_question)
 
             UserQuestion.objects.bulk_create(user_answers)
+
+            score = UserQuestion.objects.raw(user_score_result_query, params=[
+                pk, request.user.id])[0]
+            
+            user_quiz.score = score.score
+            user_quiz.save()
 
         return Response(status=status.HTTP_204_NO_CONTENT)

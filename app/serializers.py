@@ -225,3 +225,7 @@ class UserCompletionSerializer(serializers.Serializer):
 
     class Meta:
         fields = '__all__'
+
+class StudentScoreResultCalculatorSerializer(serializers.Serializer):
+    id = serializers.IntegerField()
+    result = serializers.BooleanField()
