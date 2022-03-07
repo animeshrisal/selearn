@@ -42,7 +42,7 @@ const Classroom = (props) => {
     }
 
     const goToUserQuiz = () => {
-        navigate(`quiz_list`)
+        navigate(`quiz_list/`)
     }
 
     const goToLessonPage = (id) => {

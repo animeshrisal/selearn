@@ -19,6 +19,7 @@ import AddLessonPage from "./modules/teacher/pages/AddLessonPage";
 import QuizList from "./modules/teacher/pages/QuizList";
 import Quiz from "./modules/teacher/pages/Quiz";
 import StudentQuizList from "./modules/dashboard/pages/QuizList";
+import StudentQuiz  from "./modules/dashboard/pages/Quiz";
 const queryClient = new QueryClient();
 
 function App() {
@@ -53,9 +54,14 @@ function App() {
                     <Classroom />
                   </PrivateRoute>
                 } />
-                <Route path="classroom/:classroomId/quiz_list" element={
+                <Route path="classroom/:classroomId/quiz_list/" element={
                   <PrivateRoute>
                     <StudentQuizList />
+                  </PrivateRoute>
+                } />
+                <Route path="classroom/:classroomId/quiz_list/:quizId" element={
+                  <PrivateRoute>
+                    <StudentQuiz />
                   </PrivateRoute>
                 } />
                 <Route path="classroom/:classroomId/lesson/:lessonId" element={

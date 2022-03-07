@@ -1,4 +1,4 @@
-import { Chip, Fab, Grid, IconButton, Paper } from '@mui/material';
+import { Fab, Grid, IconButton, Paper } from '@mui/material';
 import React, { useState } from 'react';
 import AddIcon from '@mui/icons-material/Add';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -46,7 +46,7 @@ const StudentQuizList = (props) => {
     }
 
     const goToQuizPage = (id) => {
-        navigate(`${id}`);
+        navigate(`${id}/`);
     };
 
     if (isLoading) {
