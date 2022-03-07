@@ -277,7 +277,7 @@ class StudentClassroomQuizCompleteAPI(viewsets.ModelViewSet):
 
             score = UserQuestion.objects.raw(user_score_result_query, params=[
                 pk, request.user.id])[0]
-            
+
             user_quiz.score = score.score
             user_quiz.save()
 

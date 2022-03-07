@@ -79,3 +79,4 @@ user_score_result_query = '''
 	group by
 		result
 '''
+
