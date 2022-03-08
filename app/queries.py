@@ -34,7 +34,7 @@ where
 
 quiz_user_choices_query = '''
 select
-		app_question.id as question,
+		app_question.id as id,
 		case
 			when app_question.correct_choice = app_userquestion.user_choice 
     then '1'

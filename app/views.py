@@ -5,7 +5,7 @@ from rest_framework import viewsets, generics,  status
 from app import serializers
 
 from app.models import Classroom, Enrollment, Lesson, Question, Quiz, UserLesson, UserQuestion, UserQuiz
-from app.serializers import ClassroomSerializer, EnrollmentSerializer, LessonSerializer, QuestionSerializer, QuizSerializer, StudentScoreResultCalculatorSerializer, UserLessonDetailSerializer, UserLessonSerializer
+from app.serializers import ClassroomSerializer, EnrollmentSerializer, LessonSerializer, QuestionSerializer, QuizSerializer, StudentScoreResultCalculatorSerializer, UserLessonDetailSerializer, UserLessonSerializer, UserScoreInputSerializer
 from rest_framework.response import Response
 
 from .shared.helpers import StandardResultsSetPagination
@@ -234,6 +234,7 @@ class SetQuizAsArchivedAPI(generics.UpdateAPIView):
 
         return Response(status=status.HTTP_204_NO_CONTENT)
 
+
 class StudentClassroomQuizAPI(viewsets.ModelViewSet):
     queryset = Quiz.objects.all()
     serializer_class = QuizSerializer
@@ -241,11 +242,12 @@ class StudentClassroomQuizAPI(viewsets.ModelViewSet):
 
     def list(self, request, classroom_pk):
         queryset = self.queryset.filter(
-            classroom_id=classroom_pk, state = 1).order_by('-created_at')
+            classroom_id=classroom_pk, state=1).order_by('-created_at')
         page = self.paginate_queryset(queryset)
         serializer = QuizSerializer(page, many=True)
         result = self.get_paginated_response(serializer.data)
         return result
+
 
 class StudentClassroomQuizCompleteAPI(viewsets.ModelViewSet):
     queryset = Quiz.objects.all()
@@ -253,22 +255,22 @@ class StudentClassroomQuizCompleteAPI(viewsets.ModelViewSet):
     pagination_class = StandardResultsSetPagination
 
     def create(self, request, classroom_pk, pk):
-        
+
         with transaction.atomic():
             quiz = Quiz.objects.get(pk=pk, classroom_id=classroom_pk)
 
             user_quiz = UserQuiz.objects.create(
-                user_id = request.user.id,
-                quiz_id = pk
+                user_id=request.user.id,
+                quiz_id=pk
             )
 
             user_answers = []
             user_submitted_answers = request.POST
             for answer in user_submitted_answers:
                 user_question = UserQuestion(
-                    user_id = request.user.id,
-                    question_id = answer,
-                    user_choice = user_submitted_answers[answer]
+                    user_id=request.user.id,
+                    question_id=answer,
+                    user_choice=user_submitted_answers[answer]
                 )
 
                 user_answers.append(user_question)
@@ -278,7 +280,13 @@ class StudentClassroomQuizCompleteAPI(viewsets.ModelViewSet):
             score = UserQuestion.objects.raw(user_score_result_query, params=[
                 pk, request.user.id])[0]
 
+            user_input = UserQuestion.objects.raw(quiz_user_choices_query, params=[
+                pk, request.user.id])
+
+
+            user_input_serializer = UserScoreInputSerializer(user_input, many=True)
+            user_score_serializer = StudentScoreResultCalculatorSerializer(score)
             user_quiz.score = score.score
             user_quiz.save()
 
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        return Response({'user_input': user_input_serializer.data, 'score': user_score_serializer.data}, status=status.HTTP_201_CREATED)

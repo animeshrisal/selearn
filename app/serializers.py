@@ -228,4 +228,8 @@ class UserCompletionSerializer(serializers.Serializer):
 
 class StudentScoreResultCalculatorSerializer(serializers.Serializer):
     id = serializers.IntegerField()
+    score = serializers.IntegerField()
+
+class UserScoreInputSerializer(serializers.Serializer):
+    id = serializers.IntegerField()
     result = serializers.BooleanField()

@@ -92,7 +92,10 @@ const completeQuiz = (classroomId, quizId, quizState) => {
   return fetch(
     `${URL}/dashboard/classroom/${classroomId}/quiz/${quizId}/complete`,
     authenticatedRequestGenerator(quizState, "POST")
-  )
+  ).then(handleResponse)
+    .then((quizResult) => {
+      return quizResult;
+    });
 }
 
 const getQuizzes = (classroomId) => {

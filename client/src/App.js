@@ -20,6 +20,7 @@ import QuizList from "./modules/teacher/pages/QuizList";
 import Quiz from "./modules/teacher/pages/Quiz";
 import StudentQuizList from "./modules/dashboard/pages/QuizList";
 import StudentQuiz  from "./modules/dashboard/pages/Quiz";
+import QuizResult from "./modules/dashboard/pages/QuizResult";
 const queryClient = new QueryClient();
 
 function App() {
@@ -30,7 +31,6 @@ function App() {
           <BrowserRouter>
             <Routes>
               <Route exact path="/" element={<Navigate to="/dashboard/" />} />
-
               <Route exact path="/login/" element={<Login />} />
               <Route exact path="/register" element={<Register />} />
               <Route path="/auth/:uid/:token" element={<ConfirmUser />} />
@@ -96,6 +96,11 @@ function App() {
                 <Route path="classroom/:classroomId/quiz_list/:quizId" element={
                   <PrivateRoute>
                     <Quiz />
+                  </PrivateRoute>
+                } />
+                <Route path="classroom/:classroomId/quiz_list/:quizId" element={
+                  <PrivateRoute>
+                    <QuizResult />
                   </PrivateRoute>
                 } />
               </Route>
