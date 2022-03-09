@@ -44,10 +44,7 @@ const StudentQuiz = () => {
     }
 
     const showCorrectAnswer = (id) => {
-        console.log(id)
-        console.log(correctAnswer)
         const obj = correctAnswer.find(o => o.id === id)
-        console.log(obj)
         return obj.result
     }
 

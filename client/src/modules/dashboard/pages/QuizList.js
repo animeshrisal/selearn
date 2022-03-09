@@ -75,9 +75,10 @@ const StudentQuizList = (props) => {
                                         </TableCell>
 
                                         <TableCell align="right">
-                                            <IconButton onClick={() => goToQuizPage(row.id)} sx={{ p: 0 }}>
+                                            {row.score === null && <IconButton onClick={() => goToQuizPage(row.id)} sx={{ p: 0 }}>
                                                 <ArrowForwardIcon />
-                                            </IconButton></TableCell>
+                                            </IconButton>}
+                                        </TableCell>
                                     </TableRow>
                                 ))}
                             </TableBody>

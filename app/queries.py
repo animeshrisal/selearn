@@ -32,6 +32,22 @@ where
 	app_lesson.id = %s'''
 
 
+student_quiz_list = '''
+	select
+		app_quiz.id as id,
+		app_quiz.name as name,
+		app_quiz.classroom_id as classroom_id,
+		app_quiz.created_at as created_at,
+		app_quiz.state as state,
+		app_userquiz."result" as "result",
+		app_userquiz.score as score
+	from
+		app_quiz
+	left outer join app_userquiz on
+		app_quiz.id = app_userquiz.quiz_id
+	where app_quiz.state = 1 and app_quiz.classroom_id = %s;
+'''
+
 quiz_user_choices_query = '''
 select
 		app_question.id as id,
@@ -79,4 +95,3 @@ user_score_result_query = '''
 	group by
 		result
 '''
-

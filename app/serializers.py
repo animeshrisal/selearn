@@ -156,6 +156,14 @@ class QuizSerializer(serializers.ModelSerializer):
         model = Quiz
         fields = ('id', 'name', 'created_at', 'state')
 
+class StudentQuizSerializer(serializers.Serializer):
+    created_at = serializers.DateTimeField(read_only=True)
+    name = serializers.CharField()
+    state = serializers.IntegerField(read_only=True)
+    id = serializers.IntegerField()
+    result = serializers.BooleanField()
+    score = serializers.IntegerField()
+    
 
 class QuestionSerializer(serializers.ModelSerializer):
     question = serializers.CharField()

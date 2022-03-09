@@ -5,7 +5,7 @@ from rest_framework import viewsets, generics,  status
 from app import serializers
 
 from app.models import Classroom, Enrollment, Lesson, Question, Quiz, UserLesson, UserQuestion, UserQuiz
-from app.serializers import ClassroomSerializer, EnrollmentSerializer, LessonSerializer, QuestionSerializer, QuizSerializer, StudentScoreResultCalculatorSerializer, UserLessonDetailSerializer, UserLessonSerializer, UserScoreInputSerializer
+from app.serializers import ClassroomSerializer, EnrollmentSerializer, LessonSerializer, QuestionSerializer, QuizSerializer, StudentQuizSerializer, StudentScoreResultCalculatorSerializer, UserLessonDetailSerializer, UserLessonSerializer, UserScoreInputSerializer
 from rest_framework.response import Response
 
 from .shared.helpers import StandardResultsSetPagination
@@ -14,7 +14,7 @@ from django.db import transaction
 
 import traceback
 
-from .queries import user_lesson_query, user_lesson_list_query, quiz_user_choices_query, user_score_result_query
+from .queries import user_lesson_query, user_lesson_list_query, quiz_user_choices_query, user_score_result_query, student_quiz_list
 
 # Create your views here.
 
@@ -237,14 +237,14 @@ class SetQuizAsArchivedAPI(generics.UpdateAPIView):
 
 class StudentClassroomQuizAPI(viewsets.ModelViewSet):
     queryset = Quiz.objects.all()
-    serializer_class = QuizSerializer
+    serializer_class = StudentQuizSerializer
     pagination_class = StandardResultsSetPagination
 
     def list(self, request, classroom_pk):
-        queryset = self.queryset.filter(
-            classroom_id=classroom_pk, state=1).order_by('-created_at')
+        queryset = Quiz.objects.raw(
+            student_quiz_list, params=[classroom_pk])
         page = self.paginate_queryset(queryset)
-        serializer = QuizSerializer(page, many=True)
+        serializer = StudentQuizSerializer(page, many=True)
         result = self.get_paginated_response(serializer.data)
         return result
 
@@ -283,9 +283,10 @@ class StudentClassroomQuizCompleteAPI(viewsets.ModelViewSet):
             user_input = UserQuestion.objects.raw(quiz_user_choices_query, params=[
                 pk, request.user.id])
 
-
-            user_input_serializer = UserScoreInputSerializer(user_input, many=True)
-            user_score_serializer = StudentScoreResultCalculatorSerializer(score)
+            user_input_serializer = UserScoreInputSerializer(
+                user_input, many=True)
+            user_score_serializer = StudentScoreResultCalculatorSerializer(
+                score)
             user_quiz.score = score.score
             user_quiz.save()
 
